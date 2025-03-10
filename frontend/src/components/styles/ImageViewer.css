@@ -1,0 +1,59 @@
+/* Thumbnail Image */
+.thumbnail {
+  width: 150px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  border-radius: 8px;
+}
+
+/* Enlarged Image Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Container for Enlarged Image */
+.full-image-container {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+/* Enlarged Image */
+.full-image {
+  width: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none !important;  /* Prevents unwanted background color */
+  border: none !important;      /* Ensures no border styling */
+  color: #70ff09  !important;      /* Keeps text color white */
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.3s ease-in-out;
+  outline: none;  /* Removes default button focus outline */
+}
+
+/* Hover Effect */
+.close-btn:hover {
+  color: red !important;
+  background: none !important; /* Prevents blue background on hover */
+}

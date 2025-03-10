@@ -1,0 +1,389 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+  overflow-x: hidden;
+}
+
+
+
+/* Dark Mode */
+.dark-mode {
+  background-color: rgba(19, 26, 41, 0.8);
+  color: #ffffff;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 120px 5%;
+  position: relative;
+}
+
+.header h1 {
+  font-size: 68px;
+  margin-bottom: 10px;
+  font-family: 'Montserrat', sans-serif;
+  animation: fadeInDown 1s ease-in-out;
+  margin-top: 24px;
+}
+
+.header h2{
+  font-size: 48px
+}
+
+.header .highlight {
+  color: #ffcc00;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.header p {
+  font-size: 20px;
+  margin-bottom: 35px;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 40px 35px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s ease-in-out;
+}
+
+.get-started {
+  background: linear-gradient(135deg, #0043ff, #FF87FE);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(255, 136, 0, 0.4);
+}
+
+.get-started:hover {
+  background: linear-gradient(135deg, #0043ff, #FF87FE);
+  box-shadow: 0 6px 12px rgba(255, 136, 0, 0.6);
+  transform: scale(1.05);
+}
+
+.watch-demo {
+  background: transparent;
+  color: #ffcc00;
+  border: 2px solid #ffcc00;
+}
+
+.watch-demo:hover {
+  background: linear-gradient(135deg, #ff0000, #FF87FE);
+  color: #131a29;
+  box-shadow:linear-gradient(135deg, #ff0000, #FF87FE);
+  transform: scale(1.05);
+}
+
+/* Why Choose Us Section */
+.why-choose {
+  text-align: center;
+  padding: 80px 5%;
+}
+
+.why-choose h1 {
+  font-size: 38px;
+  margin-bottom: 15px;
+  animation: fadeInDown 1s ease-in-out;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* Features */
+.features {
+  display: flex;
+  justify-content: space-between; /* Ensures equal spacing */
+  align-items: center;
+  gap: 20px;
+  flex-wrap: nowrap; /* Prevents wrapping */
+  margin-bottom: 40px;
+  margin-block-start: 80px
+}
+
+.feature {
+  flex: 1; /* Distributes available space evenly */
+  max-width: 30%; /* Ensures they fit in the same row */
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(0, 94, 255, 0.3);
+  transition: 0.4s;
+}
+
+.feature:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 15px rgba(0, 255, 255, 0.5);
+}
+
+.feature .feature-icon {
+  width: 55px;
+  height: 55px;
+  margin-bottom: 12px;
+}
+
+/* Statistics */
+/* Professional Statistics Box */
+.statistics-box {
+  background: rgba(255, 255, 255, 0.1); /* Light transparent background */
+  color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 60px auto;
+  margin-top:200px;
+  max-width: 900px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  transition: 0.3s ease-in-out;
+}
+
+/* Stat Box */
+.statistics-box .stat {
+  flex: 1;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05); /* Subtle transparency */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.statistics-box .stat:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Numbers Styling */
+.statistics-box .stat h3 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #ffffff; /* Keeping it simple and clean */
+}
+
+/* Description Styling */
+.statistics-box .stat p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #e0e0e0;
+}
+
+/* Subtle Divider */
+.statistics-box .stat:not(:last-child) {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+/* Let's Start Section */
+.lets-start {
+  text-align: center;
+  padding: 70px -1%;
+  background: #131a29;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transition: 0.3s ease-in-out;
+}
+
+/* Heading */
+.lets-start h2 {
+  font-size: 45px;
+  font-weight: 800;
+  margin-bottom: 39px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  animation: fadeInDown 1s ease-in-out;
+  text-transform: uppercase;
+}
+
+/* Icon inside Heading */
+.lets-start h2 i {
+  font-size: 32px;
+  color: #ffcc00;
+}
+
+/* Description */
+.lets-start p {
+  font-size: 18px;
+  font-weight: 600;
+  max-width: 700px;
+  margin: 0 auto 25px;
+  color: #e0e0e0;
+  animation: fadeInUp 1s ease-in-out;
+  line-height: 1.6;
+}
+
+/* Highlight text */
+.lets-start .highlight {
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.lets-start .brand-name {
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Call-to-Action Button */
+/* Ensure this styling applies only to the Create Account button */
+.btn-create-account {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between text and icon */
+  width: 35%; 
+  background: #007bff;
+  color: #ffffff;
+  padding: 18px 22px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.3);
+  transition: background 0.3s ease-in-out;
+}
+
+/* Icon Styling */
+.btn-create-account i {
+  font-size: 20px;
+}
+
+/* Hover Effect */
+.btn-create-account:hover {
+  background: #0056b3;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #1c1c1c;
+  color: white;
+  padding: 40px 20px;
+  margin-top: 50px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin: 10px;
+}
+
+.footer-section h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #4CAF50;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 8px 0;
+}
+
+.footer-section ul li a {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #4CAF50;
+}
+
+.social-links a {
+  font-size: 20px;
+  margin: 0 10px;
+  color: #ccc;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #4CAF50;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lets-start {
+    padding: 50px 10%;
+  }
+  
+  .lets-start h2 {
+    font-size: 32px;
+  }
+  
+  .lets-start p {
+    font-size: 18px;
+  }
+  
+  .create-account {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature {
+    width: 90%;
+  }
+
+  .statistics-box {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
