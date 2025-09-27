@@ -1,0 +1,186 @@
+/* Upload Container */
+.upload-container {
+  max-width: 450px;
+  margin: 283px auto;
+  padding: 25px;
+  background: #1e2a3a;
+  border-radius: 12px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: #ffffff;
+}
+
+.upload-container h2 {
+  margin-top: 30px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  
+}
+
+.upload-box {
+  border: 2px dashed #007bff;
+  padding: 15px;
+  background: linear-gradient(135deg, #cd00f3, #0056b3);
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.upload-box:hover {
+  background: #3b4d66;
+}
+
+.upload-box p {
+  color: #ffffff;
+  font-size: 14px;
+  margin: 0;
+}
+
+.upload-input {
+  display: none;
+}
+
+.upload-input-text {
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #007bff;
+  background: #ffffff;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #000;
+}
+
+.upload-preview {
+  margin-top: 15px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  border: 1px solid #007bff;
+}
+
+.upload-button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #cd00f3, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.upload-button:hover {
+  background: #0056b3;
+}
+
+.upload-message {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #05ff05;
+}
+
+/* New section for folder selection */
+.upload-folder-section {
+  margin-bottom: 20px;
+}
+
+.upload-folder-label {
+  display: block;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 5px;
+}
+
+.upload-folder-select,
+.upload-folder-input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #007bff;
+  background: #ffffff;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #000;
+}
+
+.upload-folder-select {
+  display: inline-block;
+}
+
+.upload-folder-input {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+
+/* For screens smaller than 768px (Tablets and smaller) */
+@media (max-width: 768px) {
+  .upload-container {
+    width: 90%; /* Adjust container width for smaller screens */
+    padding: 20px; /* Adjust padding */
+    margin: 120px auto; /* Adjust margin */
+  }
+
+  .upload-container h2 {
+    font-size: 1.2rem; /* Adjust font size */
+  }
+
+  .upload-box {
+    padding: 12px; /* Adjust padding for upload box */
+  }
+
+  .upload-input-text {
+    font-size: 13px; /* Adjust input text font size */
+  }
+
+  .upload-button {
+    font-size: 13px; /* Adjust button font size */
+  }
+
+  .upload-message {
+    font-size: 13px; /* Adjust message font size */
+  }
+
+  .upload-folder-select,
+  .upload-folder-input {
+    font-size: 13px; /* Adjust font size for folder inputs */
+  }
+}
+
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+  .upload-container {
+    width: 92%; /* Further reduce container width for mobile */
+    padding: 4px; /* Adjust padding */
+    margin: 214px auto; /* Adjust margin */
+  }
+
+  .upload-container h2 {
+    font-size: 1.1rem; /* Further reduce font size */
+  }
+
+  .upload-box {
+    padding: 10px; /* Further adjust padding for upload box */
+  }
+
+  .upload-input-text {
+    font-size: 12px; /* Adjust font size for input text */
+  }
+
+  .upload-button {
+    font-size: 12px; /* Adjust font size for button */
+  }
+
+  .upload-message {
+    font-size: 12px; /* Adjust message font size */
+  }
+
+  .upload-folder-select,
+  .upload-folder-input {
+    font-size: 12px; /* Adjust font size for folder inputs */
+  }
+}

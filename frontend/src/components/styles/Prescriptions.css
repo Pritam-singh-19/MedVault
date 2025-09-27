@@ -1,0 +1,249 @@
+/* Prescriptions Page Styles (Scoped to prevent affecting other pages) */
+.prescriptions-container {
+  margin-top: 50px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: #131a29;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.prescriptions-container h2 {
+  font-size: 26px;
+  color: #b664e3;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+ h2 {
+  font-size: 26px;
+  color: #b664e3;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+} 
+
+.loading, .error {
+  font-size: 18px;
+  color: #ff4d4d;
+}
+
+/* Floating, Rotating & Pulsating Effect for Bubbles */
+.folder {
+  background: transparent;
+  padding: 20px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0px 0px 20px rgba(77, 168, 218, 0.6);
+  animation: floatAnimation 6s infinite ease-in-out, rotateBubble 8s infinite linear, pulseEffect 3s infinite ease-in-out;
+  margin: 8px;
+}
+
+.folder:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 30px rgba(77, 168, 218, 0.9);
+}
+
+@keyframes floatAnimation {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes rotateBubble {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseEffect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.folder-link {
+  font-size: 18px;
+  text-align: center;
+  color: white;
+}
+
+.view-details-btn {
+  background-color: #4da8da;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.view-details-btn:hover {
+  background-color: #1b6ca8;
+}
+
+/* Media Queries for Responsiveness */
+
+/* For screens smaller than 1024px (Tablets) */
+@media (max-width: 1024px) {
+  .prescriptions-container {
+    flex-direction: column;
+    padding: 15px;
+    height: auto;
+  }
+
+  .folder {
+    width: 160px;
+    height: 160px;
+    font-size: 16px;
+  }
+
+  .view-details-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* For screens smaller than 768px (Tablets and smaller screens) */
+@media (max-width: 768px) {
+  .prescriptions-container {
+    padding: 15px;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .folder {
+    width: 140px;
+    height: 140px;
+    font-size: 14px;
+  }
+
+  .view-details-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
+
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+  .prescriptions-container {
+    padding: 10px;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .folder {
+    width: 157px;
+    height: 152px;
+    font-size: 12px;
+    margin-top: 100px;
+  }
+
+  .view-details-btn {
+    font-size: 10px;
+    padding: 5px 8px;
+
+  }
+
+  .no-prescriptions {
+    font-size: 16px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-top: 40px;
+    width: 90%;
+  }
+}
+
+.no-prescriptions {
+  font-size: 18px;
+  color: #2ecdff;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 60px;
+  padding: 10px 20px;
+  border: 2px dashed #08a5f3;
+  border-radius: 10px;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  animation: fadeIn 2s ease-in-out, pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 10px rgb(211 0 255 / 50%);
+  }
+  50% {
+    box-shadow: 0 0 20px rgb(0 15 255);
+  }
+  100% {
+    box-shadow: 0 0 10px rgb(99 110 209 / 50%);
+  }
+}
+
+/* Style for the Delete Folder button */
+.delete-folder-btn {
+  background-color: #ff4d4d; /* Red color for delete action */
+  color: white;
+  border: none;
+  padding: 6px 9px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 0px;
+}
+
+.delete-folder-btn:hover {
+  background-color: #cc0000; /* Darker red on hover */
+  transform: scale(1.05);
+}
+
+.delete-folder-btn:active {
+  background-color: #b30000;
+  transform: scale(0.95);
+}
+
+
+@media (max-width: 768px) {
+  .prescriptions-container h2 {
+    font-size: 20px; /* Smaller font size for mobile */
+    margin-bottom: 15px; /* Reduced margin */
+    top: 36px; /* Adjust top position for smaller screens */
+    letter-spacing: 0.5px; /* Slightly smaller letter spacing */
+  }
+}

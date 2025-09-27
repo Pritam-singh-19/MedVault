@@ -1,0 +1,127 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar-logo {
+    max-width: 358px;
+    height: 365px;
+    object-fit: contain;
+    margin-left: -107px;
+}
+
+.navbar-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 4px;
+}
+
+.navbar-links li {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links li svg {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.signout {
+    background: blue;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    height: 28px;
+    border-radius: 6px;
+    width: 100px;
+}
+
+/* For screens smaller than 768px (Tablets and smaller) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 5%; 
+        height: 70px;
+    }
+
+    .navbar-logo {
+        max-width: 150px; 
+        height: 50px; 
+    }
+
+    /* Adjust navbar links layout for mobile */
+    .navbar-links {
+        flex-direction: row; 
+        gap: 12px; 
+        align-items: center;
+        justify-content: center; 
+    }
+
+    .navbar-links li {
+        margin-left: 10px; 
+    }
+
+    .navbar-links li a {
+        font-size: 14px;
+    }
+
+    .signout {
+        width: 120px; 
+        height: 30px;
+        font-size: 14px;
+    }
+}
+
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 2%; 
+        height: 60px; 
+    }
+
+    .navbar-logo {
+        max-width: 218px; 
+        height: 212px; 
+        margin-left: -43px;
+    }
+
+    .navbar-links {
+        flex-direction: row; 
+        gap: 10px; 
+        align-items: center;
+        justify-content: center; 
+    }
+
+    .navbar-links li {
+        margin-left: 5px; 
+    }
+
+    .navbar-links li a {
+        font-size: 12px; 
+    }
+
+    .signout {
+        width: 50px; 
+        height: 26px; 
+        font-size: 11px; 
+    }
+}

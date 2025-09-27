@@ -1,0 +1,239 @@
+.navbar-dropdown-btn .fa-bars {
+    font-size: 2rem;
+}
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+    .navbar-dropdown-btn .fa-bars {
+        font-size: 1rem;
+    }
+}
+/* Dropdown Styles */
+.navbar-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.navbar-dropdown-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+    font-size: 24px;
+    outline: none;
+}
+.navbar-dropdown-btn:hover,
+.navbar-dropdown-btn:focus {
+    background: #232b3e;
+}
+
+.navbar-dropdown-menu {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    min-width: 180px;
+    background: #232b3e;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    padding: 10px 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-dropdown-menu li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-dropdown-menu a,
+.navbar-dropdown-menu button {
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    background: none;
+    border: none;
+    width: 70%;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    border-radius: 0;
+}
+
+.navbar-dropdown-menu a:hover,
+.navbar-dropdown-menu button:hover,
+.navbar-dropdown-menu a:focus,
+.navbar-dropdown-menu button:focus {
+    background: #34405a;
+    color: #cd00f3;
+}
+
+.navbar-dropdown-menu .signout {
+    background: linear-gradient(135deg, #cd00f3, #0056b3);
+    color: #fff;
+    border-radius: 0;
+    font-weight: 500;
+    margin-top: 8px;
+    padding: 12px 24px;
+    width: 100%;
+    text-align: left;
+}
+
+/* Hide old navbar links on desktop when dropdown is used */
+.navbar-links-items {
+    display: none !important;
+}
+/* Navbar Styles */
+.navbar {
+    background-color: #131a29; /* Applied your dark theme */
+    padding: 0 30px;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d3748;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+/* Updated the logo class name to .navbar-logo-img */
+.navbar-logo-img {
+    max-width: 400px;
+    height: 370px;
+    object-fit: contain;
+    margin-left: -80px;
+}
+
+/* Updated class name for navbar links to .navbar-links-items */
+.navbar-links-items {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 4px;
+}
+
+.navbar-links-items li {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links-items li a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links-items li svg {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.signout {
+    background: linear-gradient(135deg, #cd00f3, #0056b3);
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    height: 28px;
+    border-radius: 6px;
+    width: 100px;
+}
+
+/* Media Queries for Mobile Responsiveness */
+
+/* For screens smaller than 768px (Tablets and smaller) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 5%; /* Adjust padding for smaller screens */
+        height: 70px; /* Adjust navbar height */
+    }
+
+    /* Update the new logo class */
+    .navbar-logo-img {
+        max-width: 150px; /* Decrease logo size */
+        height: 130px; /* Adjust logo height */
+        margin-left: 0; /* Remove left margin */
+    }
+
+    /* Update the new class name for navbar links */
+    .navbar-links-items {
+        flex-direction: row; /* Keep navbar links in a horizontal row */
+        gap: 15px; /* Increase gap between links for better spacing */
+        align-items: center;
+        justify-content: center; /* Center the links horizontally */
+    }
+
+    .navbar-links-items li {
+        margin-left: 10px; /* Adjust left margin between links */
+    }
+
+    .navbar-links-items li a {
+        font-size: 14px; /* Adjust font size for better readability */
+    }
+
+    .signout {
+        width: 120px; /* Adjust signout button width */
+        height: 30px; /* Adjust button height */
+        font-size: 14px; /* Adjust font size */
+    }
+}
+
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 2%; /* Adjust padding for very small screens */
+        height: 60px; /* Reduce navbar height */
+    }
+
+    /* Update the new logo class */
+    .navbar-logo-img {
+        max-width: 151px; /* Further reduce logo size */
+        height: 150px; /* Further adjust logo height */
+        margin-left: -34px; /* Remove left margin */
+    }
+
+    /* Update the new class name for navbar links */
+    .navbar-links-items {
+        flex-direction: row; /* Keep navbar links in a horizontal row */
+        gap: 0px; /* Adjust gap for better spacing */
+        align-items: center;
+        justify-content: center; /* Center the links horizontally */
+    }
+
+    .navbar-links-items li {
+        margin-left: 5px; /* Decrease the margin between links */
+    }
+
+    .navbar-links-items li a {
+        font-size: 8px; /* Reduce font size for smaller screens */
+    }
+
+    .signout {
+        width: 100px; /* Adjust signout button width */
+        height: 28px; /* Adjust button height */
+        font-size: 12px; /* Adjust font size */
+    }
+}

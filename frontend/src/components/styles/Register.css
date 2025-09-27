@@ -1,0 +1,135 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #131a29;
+  color: #ffffff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.register-container {
+  max-width: 400px;
+  margin: 170px auto;
+  padding: 20px;
+  background-color: #1c2541;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.register-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #007bff;
+}
+
+.register-container .error-message,
+.register-container .success-message {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #ff4d4d;
+}
+
+.register-container .success-message {
+  color: #4caf50;
+}
+
+.register-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-container input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #2e3b4e;
+  color: #ffffff;
+}
+
+.register-container input::placeholder {
+  color: #bbb;
+}
+
+.register-container button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-container button:hover {
+  background-color: #0056b3;
+}
+
+.register-container p {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register-container p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.register-container p a:hover {
+  text-decoration: underline;
+}
+
+/* Media Queries for Mobile Responsiveness */
+
+/* For screens smaller than 768px (Tablets and smaller) */
+@media (max-width: 768px) {
+  .register-container {
+    max-width: 320px; /* Adjust the width for smaller screens */
+    margin: 150px auto; /* Adjust margin */
+    padding: 15px; /* Adjust padding */
+  }
+
+  .register-container h2 {
+    font-size: 20px; /* Adjust font size */
+  }
+
+  .register-container input {
+    font-size: 14px; /* Adjust input font size */
+  }
+
+  .register-container button {
+    font-size: 14px; /* Adjust button font size */
+  }
+
+  .register-container p {
+    font-size: 12px; /* Adjust paragraph font size */
+  }
+}
+
+/* For screens smaller than 480px (Mobile phones) */
+@media (max-width: 480px) {
+  .register-container {
+    max-width: 342px; /* Further reduce width */
+    margin: 171px auto; /* Adjust margin */
+    padding: 9px; /* Adjust padding */
+  }
+
+  .register-container h2 {
+    font-size: 18px; /* Further reduce font size */
+  }
+
+  .register-container input {
+    font-size: 14px; /* Adjust font size */
+  }
+
+  .register-container button {
+    font-size: 14px; /* Adjust button font size */
+  }
+
+  .register-container p {
+    font-size: 12px; /* Adjust paragraph font size */
+  }
+}

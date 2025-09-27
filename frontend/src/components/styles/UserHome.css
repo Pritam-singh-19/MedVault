@@ -1,0 +1,289 @@
+/* Floating Chatbot Button */
+.floating-chat-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: #FFD700;
+  color: #16222A;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: background 0.2s;
+}
+.floating-chat-btn:hover {
+  background: #ffcc00;
+}
+
+/* Chatbot Popup/Modal */
+.chatbot-popup {
+  position: fixed;
+  bottom: -30px;
+  right: 32px;
+  width: 350px;
+  max-width: 98vw;
+  background: #232b3e;
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.2s;
+}
+.chatbot-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: #1a2032;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.chatbot-close-btn {
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.chatbot-close-btn:hover {
+  background: #232b3e;
+}
+
+@media (max-width: 480px) {
+  .floating-chat-btn {
+    bottom: 18px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+  }
+  .chatbot-popup {
+    bottom: -8px;
+    right: 8px;
+    width: 98vw;
+    min-width: 0;
+    border-radius: 10px;
+  }
+  .chatbot-popup-header {
+    padding: 8px 10px;
+    font-size: 1rem;
+  }
+}
+/* UserHome.css */
+.user-home {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3A6073, #16222A);
+  color: white;
+  text-align: center;
+  padding: 50px 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.welcome-section {
+  margin-bottom: 30px;
+  margin-top: 70px;
+}
+
+.welcome-section h1 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-section p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.home-card {
+  margin-top: 70px;
+  width: 280px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.home-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.home-card h3 {
+  margin-top: 10px;
+  font-size: 1.5rem;
+}
+
+.home-card p {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.home-card svg {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #FFD700;
+}
+
+/* Media Queries */
+
+/* For screens smaller than 1024px (Tablets and below) */
+@media (max-width: 1024px) {
+  .welcome-section h1 {
+    font-size: 2.4rem; /* Slightly smaller font for tablets */
+  }
+
+  .welcome-section p {
+    font-size: 1.1rem; /* Adjust paragraph size */
+  }
+
+  .cards-container {
+    justify-content: center;
+    margin-top: 15px;
+    gap: 20px;
+  }
+
+  .home-card {
+    margin-top: 100px;
+    width: 250px; /* Reduce width of home card for better fit */
+    padding: 15px;
+  }
+
+  .home-card h3 {
+    font-size: 1.4rem;
+  }
+
+  .home-card p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Reminder form inside card */
+.home-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.home-card input,
+.home-card button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.home-card input {
+  background: rgba(255, 255, 255, 0.9);
+  color: #16222A;
+  outline: none;
+}
+
+.home-card button {
+  background: #FFD700;
+  color: #16222A;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.home-card button:hover {
+  background: #ffcc00;
+  transform: translateY(-2px);
+}
+
+
+
+/* For screens smaller than 768px (Mobile devices) */
+@media (max-width: 768px) {
+  .welcome-section {
+    margin-top: 40px; /* Adjust spacing for smaller screens */
+  }
+
+  .welcome-section h1 {
+    font-size: 2rem; /* Further reduce font size for mobile */
+  }
+
+  .welcome-section p {
+    font-size: 1rem; /* Adjust paragraph size for mobile */
+  }
+
+  .cards-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .home-card {
+    width: 90%;
+    padding: 15px;
+    margin: 10px 0;
+  }
+
+  .home-card h3 {
+    font-size: 1.3rem; /* Slightly smaller heading */
+  }
+
+  .home-card p {
+    font-size: 0.9rem; /* Adjust paragraph size */
+  }
+
+  .home-card svg {
+    font-size: 35px; /* Adjust icon size for mobile */
+  }
+}
+
+/* For screens smaller than 480px (Very small mobile devices in portrait mode) */
+@media (max-width: 480px) {
+  .welcome-section h1 {
+    font-size: 1.8rem; /* Even smaller font for very small screens */
+  }
+
+  .welcome-section p {
+    font-size: 0.9rem; /* Adjust paragraph size for very small screens */
+  }
+
+  .home-card {
+    width: 94%;
+    padding: 7px;
+    margin-top: 50px;
+  }
+
+  .home-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .home-card p {
+    font-size: 0.85rem; /* Smaller text for mobile */
+  }
+
+  .home-card svg {
+    font-size: 30px; /* Smaller icon for mobile */
+  }
+}

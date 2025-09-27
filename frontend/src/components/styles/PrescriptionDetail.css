@@ -1,0 +1,207 @@
+/* Prescription Details Page Styles */
+.prescription-details-container {
+  width: 100vw; 
+  height: 100vh; 
+  padding: 20px;
+  background: rgba(19, 26, 41, 0.85); 
+  backdrop-filter: blur(10px);
+  color: white;
+  text-align: center;
+  border-radius: 0; 
+  box-shadow: none; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  padding-top: 80px; 
+  overflow-y: auto; 
+}
+
+/* Page Title */
+.bad {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #4da8da;
+  position: fixed;
+  top: 85px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 10px;
+  background: rgba(19, 26, 41, 0.85);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  text-align: center;
+  border-radius: 0;
+}
+
+
+/* Back Button */
+.back-button {
+  display: inline-block;
+  margin: 40px 14px 35px;
+  padding: 8px 14px;
+  background: #4da8da;
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: 0.3s ease-in-out;
+  position: fixed;
+  top: 154px; 
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100; 
+}
+
+.back-button:hover {
+  background: #1b6ca8;
+  transform: scale(1.05);
+}
+
+/* Prescription Images Grid */
+.prescription-images {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 83px;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: center;
+  padding: 80px 20px 20px; 
+  margin-top: 150px;
+}
+
+/* Individual Prescription Item */
+.prescription-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  max-width: 250px;
+  max-height: 499px;
+  margin: auto;
+}
+
+.prescription-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Image Container */
+.image-container {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Image */
+.prescription-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.prescription-item:hover .prescription-image {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* Placeholder for Broken Images */
+.image-placeholder {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Image Details */
+.image-details {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.filename {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4da8da;
+}
+
+.upload-date {
+  font-size: 14px;
+  color: #cccccc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .prescription-details-container {
+    padding: 1px;
+    padding-top: 80px; 
+  }
+
+  .prescription-images {
+    grid-template-columns: repeat(auto-fit, minmax(174px, 1fr));
+  }
+
+  .prescription-image {
+    height: 150px;
+  }
+
+  .filename {
+    font-size: 14px;
+  }
+
+  .upload-date {
+    font-size: 12px;
+  }
+}
+
+/* Delete Button */
+.delete-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #ff4d4d; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  outline: none;
+}
+
+.delete-button:hover {
+  background: #d43f3f; 
+  transform: scale(1.05);
+}
+
+.delete-button:active {
+  transform: scale(0.95);
+  background: #b53030;
+}
+
+/* Position the Delete Button */
+.prescription-item {
+  position: relative;
+  text-align: center;
+}
+
+.delete-button-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
