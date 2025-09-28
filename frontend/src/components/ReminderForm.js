@@ -7,6 +7,7 @@ import medvaultLogo from "../assets/Medvault-logo.png";
 const ReminderForm = ({ onSetReminder }) => {
   const [medicine, setMedicine] = useState("");
   const [time, setTime] = useState("");
+  const [days, setDays] = useState(''); // Number of days for the reminder
   const [message, setMessage] = useState("");
   const [reminders, setReminders] = useState([]);
 
@@ -33,9 +34,9 @@ const ReminderForm = ({ onSetReminder }) => {
   useEffect(() => {
     if (!("Notification" in window)) return;
     Notification.requestPermission();
-    // Track which reminders have already triggered for this minute
-    let notified = {};
-    const interval = setInterval(() => {
+
+    let intervalId;
+    function checkReminders() {
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
@@ -43,34 +44,47 @@ const ReminderForm = ({ onSetReminder }) => {
         const [h, m] = reminder.time.split(":");
         const reminderHour = Number(h);
         const reminderMinute = Number(m);
-        const key = `${reminder._id || reminder.medicine}-${reminder.time}`;
-        // If time matches (same hour and minute) and not already notified in this interval
+  // const key = `${reminder._id || reminder.medicine}-${reminder.time}`;
+        // Check if today is within the allowed days
+        const createdAt = new Date(reminder.createdAt);
+        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const createdDate = new Date(createdAt.getFullYear(), createdAt.getMonth(), createdAt.getDate());
+        const diffDays = Math.floor((nowDate - createdDate) / (1000 * 60 * 60 * 24));
+        // Unique key for this reminder and date
         if (
+          diffDays >= 0 &&
+          diffDays < (reminder.days || 1) &&
           currentHour === reminderHour &&
-          currentMinute === reminderMinute &&
-          !notified[key]
+          currentMinute === reminderMinute
         ) {
-if (Notification.permission === "granted") {
-  new Notification(`Medicine Reminder`, {
-    body: `It's time to take your medicine: ${reminder.medicine}`,
-    icon: medvaultLogo, // MedVault logo as notification icon
-  });
-  notified[key] = true;
-}
-        }
-        // Reset notification flag if minute has passed
-        if (currentMinute !== reminderMinute) {
-          notified[key] = false;
+          if (Notification.permission === "granted") {
+            new Notification(`Medicine Reminder`, {
+              body: `It's time to take your medicine: ${reminder.medicine}`,
+              icon: medvaultLogo,
+            });
+          }
         }
       });
-    }, 15000); // Check every 15 seconds for better reliability
-    return () => clearInterval(interval);
+    }
+
+    // Align to the next minute
+    const now = new Date();
+    const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+    const timeoutId = setTimeout(() => {
+      checkReminders();
+      intervalId = setInterval(checkReminders, 60000);
+    }, msToNextMinute);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [reminders]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!medicine || !time) {
-      setMessage("⚠️ Please enter both medicine name and time.");
+    if (!medicine || !time || !days || Number(days) < 1) {
+      setMessage("⚠️ Please enter medicine name, time, and valid number of days.");
       return;
     }
     setMessage("");
@@ -78,14 +92,15 @@ if (Notification.permission === "granted") {
       const token = localStorage.getItem("token");
       const res = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/reminders`,
-        { medicine, time },
+  { medicine, time, days: Number(days) },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.status === 201) {
         setMessage("✅ Reminder set!");
-        onSetReminder({ medicine, time });
-        setMedicine("");
-        setTime("");
+  onSetReminder({ medicine, time, days });
+  setMedicine("");
+  setTime("");
+  setDays('');
         // Refetch reminders after setting a new one
         const fetchReminders = async () => {
           try {
@@ -151,6 +166,15 @@ if (Notification.permission === "granted") {
               <option value="PM">PM</option>
             </select>
 
+            <input
+              type="number"
+              min="1"
+              placeholder="Number of days (e.g. 5)"
+              value={days}
+              onChange={e => setDays(e.target.value)}
+              required
+              style={{ margin: '8px 0', width: '92%' }}
+            />
             <button type="submit">Set Reminder</button>
           </form>
 

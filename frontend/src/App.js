@@ -73,7 +73,14 @@ function App() {
         const reminderHour = Number(h);
         const reminderMinute = Number(m);
         const key = `${reminder._id || reminder.medicine}-${reminder.time}`;
+        // Check if today is within the allowed days
+        const createdAt = new Date(reminder.createdAt);
+        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const createdDate = new Date(createdAt.getFullYear(), createdAt.getMonth(), createdAt.getDate());
+        const diffDays = Math.floor((nowDate - createdDate) / (1000 * 60 * 60 * 24));
         if (
+          diffDays >= 0 &&
+          diffDays < (reminder.days || 1) &&
           currentHour === reminderHour &&
           currentMinute === reminderMinute &&
           !notified[key]

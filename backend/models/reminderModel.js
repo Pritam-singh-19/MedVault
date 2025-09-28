@@ -14,6 +14,16 @@ const reminderSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  days: {
+    type: Number,
+    required: true,
+    default: 1
+  },
+  takenHistory: {
+    type: Map,
+    of: Boolean, // key: YYYY-MM-DD, value: true if taken
+    default: {}
+  },
   createdAt: {
     type: Date,
     default: Date.now

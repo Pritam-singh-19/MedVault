@@ -1,8 +1,10 @@
-const express = require('express');
-const { createReminder, getReminders } = require('../controllers/reminderController');
-const authMiddleware = require('../middleware/authMiddleware');
 
+const express = require('express');
+const { createReminder, getReminders, markMedicineTaken } = require('../controllers/reminderController');
+const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
+// Mark a reminder as taken for a specific day
+router.post('/:reminderId/mark-taken', authMiddleware, markMedicineTaken);
 
 // Create a new reminder
 router.post('/', authMiddleware, createReminder);

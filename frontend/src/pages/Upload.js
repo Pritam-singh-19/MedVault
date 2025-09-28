@@ -160,6 +160,27 @@ const Upload = () => {
             className="upload-input"
             onChange={handleFileChange}
             accept="image/*,application/pdf"
+            style={{ display: "none" }}
+          />
+        </div>
+
+        {/* Take Photo Section (Camera) */}
+        <div className="upload-box" style={{ marginTop: '10px' }}>
+          <button
+            type="button"
+            className="upload-button"
+            onClick={() => document.getElementById("cameraInput").click()}
+            style={{ width: '100%' }}
+          >
+            Take Photo
+          </button>
+          <input
+            type="file"
+            id="cameraInput"
+            accept="image/*"
+            capture="environment"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
           />
         </div>
 
