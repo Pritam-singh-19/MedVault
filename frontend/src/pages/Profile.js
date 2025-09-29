@@ -18,7 +18,7 @@ const Profile = () => {
   });
 
   // Fetch latest profile from backend
-  const fetchProfile = async () => {
+  const fetchProfile = React.useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -34,7 +34,6 @@ const Profile = () => {
           "Content-Type": "application/json",
         },
       });
-      
 
       const result = await response.json();
       if (!response.ok) throw new Error(result.message);
@@ -46,7 +45,7 @@ const Profile = () => {
       setError(error.message);
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     fetchProfile();
@@ -57,9 +56,6 @@ const Profile = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, profilePhoto: e.target.files[0] });
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

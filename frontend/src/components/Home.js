@@ -19,11 +19,11 @@ function Home() {
   // Animated statistics logic
   const statsRef = useRef(null);
   const [statsAnimated, setStatsAnimated] = useState(false);
-  const statsData = [
+  const statsData = React.useMemo(() => [
     { end: 10000, suffix: '+', label: 'Active Users' },
     { end: 50000, suffix: '+', label: 'Prescriptions Stored' },
     { end: 99.9, suffix: '%', label: 'Uptime', decimals: 1 },
-  ];
+  ], []);
   const [statValues, setStatValues] = useState(statsData.map(() => 0));
 
   useEffect(() => {
