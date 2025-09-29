@@ -1,3 +1,4 @@
+import { messaging, getToken } from "./firebase";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -19,6 +20,24 @@ import ReminderForm from "./components/ReminderForm";
 import axios from "axios";
 
 function App() {
+  useEffect(() => {
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        getToken(messaging, { vapidKey: 'BLXqt2LSD9-k1eoxtR5WTtlyZhHtx043_ZYSYespLkt6UfWCqi5ZIrzY3Ei0v0o1jtqXHnrzalTEkj2sT4_UHqw' })
+          .then((currentToken) => {
+            if (currentToken) {
+              // Send this token to your backend and save it for the user
+              console.log('FCM Token:', currentToken);
+            } else {
+              console.log('No registration token available. Request permission to generate one.');
+            }
+          })
+          .catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+          });
+      }
+    });
+  }, []);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [reminders, setReminders] = useState([]);
