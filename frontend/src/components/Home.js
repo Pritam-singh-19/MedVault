@@ -59,7 +59,7 @@ function Home() {
       }
     }
     requestAnimationFrame(animateStats);
-  }, [statsAnimated]);
+  }, [statsAnimated, statsData]);
     return (
       <div>
         <div className="home dark-mode">

@@ -29,71 +29,71 @@ const ExplainReport = () => {
 
   useEffect(() => {
     const extractTextAndSummarize = async () => {
-      if (!fileId && !imageUrl) {
-        setError('⚠️ No file or text provided.');
-        return;
-      }
+      useEffect(() => {
+        const extractTextAndSummarize = async () => {
+          if (!fileId && !imageUrl) {
+            setError('⚠️ No file or text provided.');
+            return;
+          }
 
-      setLoading(true);
-      setError('');
-      setSummary('');
+          setLoading(true);
+          setError('');
+          setSummary('');
 
-      try {
-        const token = localStorage.getItem('token');
-        let response;
+          try {
+            const token = localStorage.getItem('token');
+            let response;
 
-        if (fileId && isPdf) {
-          // For PDFs, send fileId to backend
-          response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/explain-report`,
-            { fileId },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-              }
+            if (fileId && isPdf) {
+              // For PDFs, send fileId to backend
+              response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/explain-report`,
+                { fileId },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                  }
+                }
+              );
+            } else {
+              // For images, perform OCR and send extracted text
+              const Tesseract = (await import('tesseract.js')).default;
+              const { data: { text: ocrText } } = await Tesseract.recognize(
+                imageUrl,
+                'eng',
+                {
+                  logger: m => console.log(m.status, m.progress)
+                }
+              );
+
+              response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/explain-report`,
+                { text: ocrText },
+                {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                  }
+                }
+              );
             }
-          );
-        } else {
-          // For images, perform OCR and send extracted text
-          const Tesseract = (await import('tesseract.js')).default;
-          const { data: { text: ocrText } } = await Tesseract.recognize(
-            imageUrl,
-            'eng',
-            {
-              logger: m => console.log(m.status, m.progress)
+
+            if (response.data?.summary) {
+              setSummary(response.data.summary);
+            } else {
+              setError('❌ Failed to get summary from backend.');
             }
-          );
+          } catch (err) {
+            console.error('Error during summary:', err);
+            setError(err.message || '❌ Something went wrong while analyzing your report.');
+          } finally {
+            setLoading(false);
+          }
+        };
 
-          response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/explain-report`,
-            { text: ocrText },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
-        }
-
-        if (response.data?.summary) {
-          setSummary(response.data.summary);
-        } else {
-          setError('❌ Failed to get summary from backend.');
-        }
-      } catch (err) {
-        console.error('Error during summary:', err);
-        setError(err.message || '❌ Something went wrong while analyzing your report.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    extractTextAndSummarize();
-  }, [fileId, imageUrl]);
-
-  return (
+        extractTextAndSummarize();
+      }, [fileId, imageUrl, isPdf]);
     <div className="explain-report-container">
       <div className="explain-report-title">
         📄 Explain Report
