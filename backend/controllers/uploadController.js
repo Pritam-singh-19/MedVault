@@ -90,8 +90,8 @@ const uploadFile = async (req, res) => {
       try {
         console.log("Starting database update for user:", userId);
         
-        // Construct the full image URL with proper protocol and host
-        const fullImageUrl = `${req.protocol}://${req.get('host')}/api/upload/image/${writeStream.id}`;
+  // Construct the full image URL with HTTPS protocol and host
+  const fullImageUrl = `https://${req.get('host')}/api/upload/image/${writeStream.id}`;
 
         // Find or create the folder
         const user = await User.findOneAndUpdate(
@@ -327,7 +327,7 @@ const getImagesByFolder = async (req, res) => {
         fileId: image.fileId,
         filename: filename,
         uploadDate: uploadDate,
-        imageUrl: `${req.protocol}://${req.get('host')}/api/upload/image/${image.fileId}`
+        imageUrl: `https://${req.get('host')}/api/upload/image/${image.fileId}`
       };
     });
 
