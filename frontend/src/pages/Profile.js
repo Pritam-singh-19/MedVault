@@ -50,7 +50,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [fetchProfile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
