@@ -201,7 +201,7 @@ const Upload = () => {
             onChange={(e) => setFolder(e.target.value)}
           >
             <option value="">Select a folder</option>
-            {folders.map((folderData) => (
+            {(folders || []).map((folderData) => (
               <option key={folderData.folderName} value={folderData.folderName}>
                 {folderData.folderName}
               </option>
