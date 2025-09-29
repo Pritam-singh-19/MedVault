@@ -207,7 +207,7 @@ const PrescriptionDetails = () => {
       if (!hasValidExtension) {
         const urlParts = originalUrl.split('.');
         if (urlParts.length > 1) {
-          let ext = urlParts[urlParts.length - 1].split(/[\#\?]/)[0]; // remove query/hash
+          let ext = urlParts[urlParts.length - 1].split(/[?#]/)[0]; // remove query/hash
           if (imageExtensions.includes(ext.toLowerCase())) {
             ext = 'png';
           }
