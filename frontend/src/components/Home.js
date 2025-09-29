@@ -37,7 +37,7 @@ function Home() {
     window.addEventListener('scroll', handleScroll);
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [statsAnimated]);
+  }, [statsAnimated, statsRef]);
 
   useEffect(() => {
     if (!statsAnimated) return;
@@ -147,25 +147,25 @@ function Home() {
               <div className="footer-section">
                 <h4>About MedVault</h4>
                 <ul>
-                  <li><a href="#">Our Mission</a></li>
-                  <li><a href="#">Privacy Policy</a></li>
-                  <li><a href="#">Terms of Service</a></li>
+                  <li><span style={{cursor:'pointer'}}>Our Mission</span></li>
+                  <li><span style={{cursor:'pointer'}}>Privacy Policy</span></li>
+                  <li><span style={{cursor:'pointer'}}>Terms of Service</span></li>
                 </ul>
               </div>
               <div className="footer-section">
                 <h4>Support</h4>
                 <ul>
-                  <li><a href="#">Help Center</a></li>
-                  <li><a href="#">FAQs</a></li>
-                  <li><a href="#">Contact Us</a></li>
+                  <li><span style={{cursor:'pointer'}}>Help Center</span></li>
+                  <li><span style={{cursor:'pointer'}}>FAQs</span></li>
+                  <li><span style={{cursor:'pointer'}}>Contact Us</span></li>
                 </ul>
               </div>
               <div className="footer-section">
                 <h4>Quick Links</h4>
                 <ul>
-                  <li><a href="#">Dashboard</a></li>
-                  <li><a href="#">My Prescriptions</a></li>
-                  <li><a href="#">Upload Prescription</a></li>
+                  <li><span style={{cursor:'pointer'}}>Dashboard</span></li>
+                  <li><span style={{cursor:'pointer'}}>My Prescriptions</span></li>
+                  <li><span style={{cursor:'pointer'}}>Upload Prescription</span></li>
                 </ul>
               </div>
               <div className="footer-section">

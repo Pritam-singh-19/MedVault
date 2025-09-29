@@ -33,7 +33,7 @@ const Upload = () => {
     };
 
     fetchFolders();
-  }, []);
+  }, [setFolders]);
 
   // Handle file selection and preview
   const handleFileChange = (e) => {
