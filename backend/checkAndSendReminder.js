@@ -9,8 +9,10 @@ async function checkAndSendReminders() {
   const currentMinute = now.getMinutes();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
+  console.log('⏰ checkAndSendReminders running at', now.toISOString());
   // Find all reminders that are due now
   const reminders = await Reminder.find({});
+  console.log(`🔎 Found ${reminders.length} reminders in DB.`);
   for (const reminder of reminders) {
     // Calculate if today is within the allowed days
     const createdAt = new Date(reminder.createdAt);
@@ -22,16 +24,20 @@ async function checkAndSendReminders() {
     ) {
       const [h, m] = reminder.time.split(":");
       if (Number(h) === currentHour && Number(m) === currentMinute) {
+        console.log(`📬 Reminder due: ${reminder.medicine} for user ${reminder.user} at ${reminder.time}`);
         // Get the user's FCM tokens (multi-device support)
         const user = await User.findById(reminder.user);
         if (user && user.fcmTokens && Array.isArray(user.fcmTokens)) {
           for (const token of user.fcmTokens) {
+            console.log(`➡️ Sending push to token: ${token.substring(0, 20)}...`);
             await sendPushNotification(
               token,
               'Medicine Reminder',
               `It's time to take your medicine: ${reminder.medicine}`
             );
           }
+        } else {
+          console.log(`⚠️ No FCM tokens found for user ${reminder.user}`);
         }
       }
     }
