@@ -1,0 +1,40 @@
+# Node modules# Ignore node_modules
+
+node_modules/node_modules/
+
+
+
+# Environment files# Ignore environment files
+
+.env.env
+
+.env.*.env.*
+
+
+
+# Log files# Ignore log files
+
+*.log*.log
+
+
+
+# OS files# Ignore OS files
+
+.DS_Store.DS_Store
+
+Thumbs.dbThumbs.db
+
+
+
+# Build output# Ignore build output
+
+dist/dist/
+
+build/build/
+
+
+
+# Secret keys# Ignore secret keys
+
+firebase-service-account.jsonfirebase-service-account.json
+
