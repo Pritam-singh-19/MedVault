@@ -17,14 +17,14 @@ console.log("Protect Middleware Function:", typeof protect);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+
 // Route to get user profile
 router.get("/me", protect, profileController.getProfile);
-
-
 
 // Route to update user profile (with profile photo upload support)
 router.put("/update", protect, upload.single("profilePhoto"), profileController.updateProfile);
 
-
+// Route to save FCM token (multi-device support)
+router.post("/save-fcm-token", protect, profileController.saveFcmToken);
 
 module.exports = router;

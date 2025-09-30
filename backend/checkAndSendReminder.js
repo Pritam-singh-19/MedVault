@@ -22,14 +22,16 @@ async function checkAndSendReminders() {
     ) {
       const [h, m] = reminder.time.split(":");
       if (Number(h) === currentHour && Number(m) === currentMinute) {
-        // Get the user's FCM token
+        // Get the user's FCM tokens (multi-device support)
         const user = await User.findById(reminder.user);
-        if (user && user.fcmToken) {
-          await sendPushNotification(
-            user.fcmToken,
-            'Medicine Reminder',
-            `It's time to take your medicine: ${reminder.medicine}`
-          );
+        if (user && user.fcmTokens && Array.isArray(user.fcmTokens)) {
+          for (const token of user.fcmTokens) {
+            await sendPushNotification(
+              token,
+              'Medicine Reminder',
+              `It's time to take your medicine: ${reminder.medicine}`
+            );
+          }
         }
       }
     }

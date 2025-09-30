@@ -68,4 +68,28 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, updateProfile };
+
+// Save FCM Token (Private)
+const saveFcmToken = async (req, res) => {
+  try {
+    const { fcmToken } = req.body;
+    if (!fcmToken) {
+      return res.status(400).json({ message: "FCM token is required" });
+    }
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Add token if not already present
+    if (!user.fcmTokens) user.fcmTokens = [];
+    if (!user.fcmTokens.includes(fcmToken)) {
+      user.fcmTokens.push(fcmToken);
+      await user.save();
+    }
+    res.status(200).json({ message: "FCM token saved" });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { getProfile, updateProfile, saveFcmToken };

@@ -76,6 +76,10 @@ const userSchema = new mongoose.Schema({
     type: [folderSchema],
     default: [], // Ensure folders array is initialized
   },
+  fcmTokens: {
+    type: [String],
+    default: [],
+  },
 });
 
 const User = mongoose.model("User", userSchema, "medvault"); // Collection name: 'medvault'
