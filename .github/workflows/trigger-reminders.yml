@@ -1,0 +1,12 @@
+name: Trigger MedVault Reminders
+
+on:
+  schedule:
+    - cron: '*/1 * * * *' # every minute
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call MedVault Reminder Endpoint
+        run: curl -X POST https://medvault-p0rq.onrender.com/api/cron/trigger-reminders
