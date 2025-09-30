@@ -114,48 +114,7 @@ function App() {
     return () => clearInterval(pollInterval);
   }, [isAuthenticated]);
 
-  // Periodically check reminders and show notification
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    if (!("Notification" in window)) return;
-    Notification.requestPermission();
-    let notified = {};
-    const interval = setInterval(() => {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      reminders.forEach((reminder) => {
-        const [h, m] = reminder.time.split(":");
-        const reminderHour = Number(h);
-        const reminderMinute = Number(m);
-        const key = `${reminder._id || reminder.medicine}-${reminder.time}`;
-        // Check if today is within the allowed days
-        const createdAt = new Date(reminder.createdAt);
-        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const createdDate = new Date(createdAt.getFullYear(), createdAt.getMonth(), createdAt.getDate());
-        const diffDays = Math.floor((nowDate - createdDate) / (1000 * 60 * 60 * 24));
-        if (
-          diffDays >= 0 &&
-          diffDays < (reminder.days || 1) &&
-          currentHour === reminderHour &&
-          currentMinute === reminderMinute &&
-          !notified[key]
-        ) {
-          if (Notification.permission === "granted") {
-            new Notification(`Medicine Reminder`, {
-              body: `It's time to take your medicine: ${reminder.medicine}`,
-              icon: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
-            });
-            notified[key] = true;
-          }
-        }
-        if (currentMinute !== reminderMinute) {
-          notified[key] = false;
-        }
-      });
-    }, 15000); // Check every 15 seconds
-    return () => clearInterval(interval);
-  }, [reminders, isAuthenticated]);
+  // Removed in-app Notification API usage. Let FCM/service worker handle notifications.
 
   const handleSignIn = (token, userData) => {
     setIsAuthenticated(true);

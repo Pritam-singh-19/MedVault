@@ -30,56 +30,7 @@ const ReminderForm = ({ onSetReminder }) => {
     return () => clearInterval(pollInterval);
   }, []);
 
-  // Periodically check reminders and show notification
-  useEffect(() => {
-    if (!("Notification" in window)) return;
-    Notification.requestPermission();
-
-    let intervalId;
-    function checkReminders() {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      reminders.forEach((reminder) => {
-        const [h, m] = reminder.time.split(":");
-        const reminderHour = Number(h);
-        const reminderMinute = Number(m);
-  // const key = `${reminder._id || reminder.medicine}-${reminder.time}`;
-        // Check if today is within the allowed days
-        const createdAt = new Date(reminder.createdAt);
-        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const createdDate = new Date(createdAt.getFullYear(), createdAt.getMonth(), createdAt.getDate());
-        const diffDays = Math.floor((nowDate - createdDate) / (1000 * 60 * 60 * 24));
-        // Unique key for this reminder and date
-        if (
-          diffDays >= 0 &&
-          diffDays < (reminder.days || 1) &&
-          currentHour === reminderHour &&
-          currentMinute === reminderMinute
-        ) {
-          if (Notification.permission === "granted") {
-            new Notification(`Medicine Reminder`, {
-              body: `It's time to take your medicine: ${reminder.medicine}`,
-              icon: medvaultLogo,
-            });
-          }
-        }
-      });
-    }
-
-    // Align to the next minute
-    const now = new Date();
-    const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-    const timeoutId = setTimeout(() => {
-      checkReminders();
-      intervalId = setInterval(checkReminders, 60000);
-    }, msToNextMinute);
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [reminders]);
+  // Removed in-app Notification API usage. Let FCM/service worker handle notifications.
 
   const handleSubmit = async (e) => {
     e.preventDefault();
