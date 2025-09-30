@@ -1,17 +1,6 @@
-// Register FCM service worker for push notifications
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js')
-      .then(function(registration) {
-        console.log('FCM Service Worker registered with scope:', registration.scope);
-      })
-      .catch(function(err) {
-        console.log('FCM Service Worker registration failed:', err);
-      });
-  });
-}
-import { messaging, getToken } from "./firebase";
+
 import React, { useState, useEffect } from "react";
+import { messaging, getToken } from "./firebase";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Home from "./components/Home";
@@ -28,8 +17,20 @@ import Navbar2 from "./components/Navbar2";
 import "./App.css";
 import ExplainReport from "./pages/ExplainReport";
 import ReminderForm from "./components/ReminderForm";
-
 import axios from "axios";
+
+// Register FCM service worker for push notifications
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(function(registration) {
+        console.log('FCM Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(err) {
+        console.log('FCM Service Worker registration failed:', err);
+      });
+  });
+}
 
 function App() {
   useEffect(() => {
