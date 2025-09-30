@@ -1,4 +1,3 @@
 .env
 backend/.env
 frontend/.env
-backend/firebase-service-account.json
