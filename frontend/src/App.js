@@ -33,8 +33,11 @@ if ('serviceWorker' in navigator) {
 }
 
 function App() {
-  // Store FCM token in state
+  // Move all useState declarations to the top
   const [fcmToken, setFcmToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+  const [reminders, setReminders] = useState([]);
 
   // Request notification permission and get FCM token
   useEffect(() => {
@@ -75,9 +78,6 @@ function App() {
     };
     sendFcmToken();
   }, [isAuthenticated, fcmToken]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [reminders, setReminders] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
