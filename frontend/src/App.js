@@ -1,3 +1,15 @@
+// Register FCM service worker for push notifications
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(function(registration) {
+        console.log('FCM Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(err) {
+        console.log('FCM Service Worker registration failed:', err);
+      });
+  });
+}
 import { messaging, getToken } from "./firebase";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
