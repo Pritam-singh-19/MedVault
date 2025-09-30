@@ -33,13 +33,17 @@ if ('serviceWorker' in navigator) {
 }
 
 function App() {
+  // Store FCM token in state
+  const [fcmToken, setFcmToken] = useState(null);
+
+  // Request notification permission and get FCM token
   useEffect(() => {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
         getToken(messaging, { vapidKey: 'BLXqt2LSD9-k1eoxtR5WTtlyZhHtx043_ZYSYespLkt6UfWCqi5ZIrzY3Ei0v0o1jtqXHnrzalTEkj2sT4_UHqw' })
           .then((currentToken) => {
             if (currentToken) {
-              // Send this token to your backend and save it for the user
+              setFcmToken(currentToken);
               console.log('FCM Token:', currentToken);
             } else {
               console.log('No registration token available. Request permission to generate one.');
@@ -51,6 +55,26 @@ function App() {
       }
     });
   }, []);
+
+  // Send FCM token to backend when authenticated and token is available
+  useEffect(() => {
+    const sendFcmToken = async () => {
+      if (isAuthenticated && fcmToken) {
+        const token = localStorage.getItem("token");
+        try {
+          await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/profile/save-fcm-token`,
+            { fcmToken },
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          console.log("FCM token sent to backend");
+        } catch (err) {
+          console.error("Failed to send FCM token to backend", err);
+        }
+      }
+    };
+    sendFcmToken();
+  }, [isAuthenticated, fcmToken]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [reminders, setReminders] = useState([]);
