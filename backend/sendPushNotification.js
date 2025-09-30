@@ -19,7 +19,11 @@ if (!admin.apps.length) {
  */
 async function sendPushNotification(fcmToken, title, body) {
   const message = {
-    notification: { title, body },
+    notification: {
+      title,
+      body,
+      icon: 'https://your-frontend-domain/Medvault-logo.png' // Replace with your actual logo URL
+    },
     token: fcmToken,
   };
   try {
