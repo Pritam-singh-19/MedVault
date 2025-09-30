@@ -1,6 +1,6 @@
-const Reminder = require('../models/reminderModel');
-const User = require('../models/userModel');
-const { sendPushNotification } = require('../sendPushNotification');
+const Reminder = require('./models/reminderModel');
+const User = require('./models/userModel');
+const { sendPushNotification } = require('./sendPushNotification');
 
 // This function should be called by a scheduler (e.g., cron job) every minute
 async function checkAndSendReminders() {
