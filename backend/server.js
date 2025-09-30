@@ -37,7 +37,8 @@ connectDB()
     app.use("/api/upload", uploadRoutes);
     app.use("/api", explainReportRoutes);
     app.use("/api", chatbotRoutes);
-    app.use("/api/reminders", require("./routes/reminderRoutes"));
+  app.use("/api/reminders", require("./routes/reminderRoutes"));
+  app.use("/api/cron", require("./routes/cronRoutes"));
     
     // Log all upload API requests
     app.use("/api/upload", (req, res, next) => {
