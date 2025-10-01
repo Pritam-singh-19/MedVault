@@ -14,4 +14,16 @@ router.post('/trigger-reminders', async (req, res) => {
   }
 });
 
+// GET version for easy testing
+router.get('/trigger-reminders', async (req, res) => {
+  console.log('🔔 /api/cron/trigger-reminders (GET) endpoint called at', new Date().toISOString());
+  try {
+    await checkAndSendReminders();
+    res.status(200).json({ message: 'Reminders checked and notifications sent (if due).' });
+  } catch (error) {
+    console.error('Error in /api/cron/trigger-reminders:', error);
+    res.status(500).json({ error: 'Failed to check/send reminders.' });
+  }
+});
+
 module.exports = router;
