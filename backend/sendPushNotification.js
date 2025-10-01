@@ -1,13 +1,20 @@
 const admin = require('firebase-admin');
 const path = require('path');
 
-// Dynamically resolve the service account path for local and production
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || path.join(__dirname, 'firebase-service-account.json');
-
 // Initialize Firebase Admin only once
 if (!admin.apps.length) {
+  let serviceAccount;
+  
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    // Use JSON string from environment variable (for production)
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+  } else {
+    // Use local file (for development)
+    serviceAccount = require(path.join(__dirname, 'firebase-service-account.json'));
+  }
+  
   admin.initializeApp({
-    credential: admin.credential.cert(require(serviceAccountPath)),
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
