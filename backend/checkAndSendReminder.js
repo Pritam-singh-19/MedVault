@@ -4,13 +4,16 @@ const { sendPushNotification } = require('./sendPushNotification');
 
 // This function should be called by a scheduler (e.g., cron job) every minute
 async function checkAndSendReminders() {
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // Get current time in IST (India Standard Time)
+  const nowUTC = new Date();
+  const nowIST = new Date(nowUTC.getTime() + (5.5 * 60 * 60 * 1000)); // Add 5.5 hours for IST
+  const currentHour = nowIST.getHours();
+  const currentMinute = nowIST.getMinutes();
+  const today = new Date(nowIST.getFullYear(), nowIST.getMonth(), nowIST.getDate());
 
-  console.log('⏰ checkAndSendReminders running at', now.toISOString());
-  console.log(`🕐 Current time: ${currentHour}:${currentMinute.toString().padStart(2, '0')}`);
+  console.log('⏰ checkAndSendReminders running at', nowUTC.toISOString(), '(UTC)');
+  console.log('🇮🇳 IST time:', nowIST.toISOString());
+  console.log(`🕐 Current IST time: ${currentHour}:${currentMinute.toString().padStart(2, '0')}`);
   
   // Find all reminders that are due now
   const reminders = await Reminder.find({});
@@ -21,9 +24,10 @@ async function checkAndSendReminders() {
   for (const reminder of reminders) {
     console.log(`🔍 Checking reminder: ${reminder.medicine} at ${reminder.time} (created: ${new Date(reminder.createdAt).toLocaleDateString()})`);
     
-    // Calculate if today is within the allowed days
-    const createdAt = new Date(reminder.createdAt);
-    const createdDate = new Date(createdAt.getFullYear(), createdAt.getMonth(), createdAt.getDate());
+    // Calculate if today is within the allowed days (using IST)
+    const createdAtUTC = new Date(reminder.createdAt);
+    const createdAtIST = new Date(createdAtUTC.getTime() + (5.5 * 60 * 60 * 1000));
+    const createdDate = new Date(createdAtIST.getFullYear(), createdAtIST.getMonth(), createdAtIST.getDate());
     const diffDays = Math.floor((today - createdDate) / (1000 * 60 * 60 * 24));
     
     console.log(`📅 Day ${diffDays + 1} of ${reminder.days || 1} days`);
