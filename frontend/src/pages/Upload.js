@@ -21,7 +21,7 @@ const Upload = () => {
           return;
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/upload/folders`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/folders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -114,7 +114,7 @@ const Upload = () => {
       formData.append("file", file);
       formData.append("folder", folder);
 
-  const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`, formData, config);
+  const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload`, formData, config);
 
 
       if (response.status === 200) {

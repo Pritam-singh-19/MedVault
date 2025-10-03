@@ -22,7 +22,7 @@ const Prescriptions = () => {
         return;
       }
 
-  const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/upload/folders`, {
+ const response = await axios.get(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/folders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -52,7 +52,7 @@ const Prescriptions = () => {
 
     try {
       const token = localStorage.getItem("token");
-  await axios.delete(`${process.env.REACT_APP_API_URL}/api/upload/folders/${folderName}`, {
+ await axios.delete(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/folders/${folderName}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

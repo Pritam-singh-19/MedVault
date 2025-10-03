@@ -25,7 +25,7 @@ const PrescriptionDetails = () => {
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/upload/folder/${folderName}`,
+        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/folder/${folderName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -142,7 +142,7 @@ const PrescriptionDetails = () => {
       }
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/upload/update-name/${editingFileId}`,
+        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/update-name/${editingFileId}`,
         { newName: newFilename },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -176,7 +176,7 @@ const PrescriptionDetails = () => {
       }
   
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/upload/delete/${fileId}`,
+        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/upload/delete/${fileId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }

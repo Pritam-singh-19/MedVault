@@ -46,7 +46,7 @@ const ExplainReport = () => {
         if (fileId && isPdf) {
           // For PDFs, send fileId to backend
           response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/explain-report`,
+            `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/explain-report`,
             { fileId },
             {
               headers: {
@@ -67,7 +67,7 @@ const ExplainReport = () => {
           );
 
           response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/explain-report`,
+           `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/explain-report`,
             { text: ocrText },
             {
               headers: {

@@ -42,7 +42,7 @@ const ChatBot = ({ summary }) => {
     setInput('');
 
     try {
-  const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/chatbot`, {
+ const res = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/chatbot`, {
         query: input,
         reportText: summary || ""
       });
