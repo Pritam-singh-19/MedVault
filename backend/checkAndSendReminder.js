@@ -57,48 +57,30 @@ async function checkAndSendReminders() {
         dueCount++;
         
         try {
-          // Get the user's FCM tokens (multi-device support)
-          const user = await User.findById(reminder.user);
-          
-          if (user && user.fcmTokens && Array.isArray(user.fcmTokens) && user.fcmTokens.length > 0) {
-            console.log(`👤 User found with ${user.fcmTokens.length} device(s)`);
-            
-            // Send to ALL devices (mobile + desktop)
-            for (let i = 0; i < user.fcmTokens.length; i++) {
-              const token = user.fcmTokens[i];
-              console.log(`📱 Sending to device ${i + 1}: ${token.substring(0, 30)}...`);
-              
-              try {
-                const result = await sendPushNotification(
-                  token,
-                  '💊 Medicine Reminder',
-                  `Time to take your medicine: ${reminder.medicine}`,
-                  {
-                    reminderTime: reminder.time,
-                    medicine: reminder.medicine,
-                    timestamp: nowIST.toISOString(),
-                    type: 'medicine_reminder'
-                  }
-                );
-                
-                console.log(`✅ Notification sent to device ${i + 1}:`, result?.successCount || 'Success');
-                sentCount++;
-              } catch (error) {
-                console.error(`❌ Failed to send to device ${i + 1}:`, error.message);
-                
-                // Clean up invalid FCM tokens
-                if (error.code === 'messaging/registration-token-not-registered' || 
-                    error.code === 'messaging/invalid-registration-token') {
-                  console.log(`🗑️ Removing invalid token from user`);
-                  user.fcmTokens.splice(i, 1);
-                  await user.save();
-                  i--; // Adjust index after removal
-                }
-              }
+          // ✅ NEW APPROACH: Pass User ID to sendPushNotification
+          // The function will automatically find all FCM tokens and send to all devices
+          const result = await sendPushNotification(
+            reminder.user,  // MongoDB User ID (ObjectId) - not FCM token
+            '💊 Medicine Reminder',
+            `Time to take your ${reminder.medicine}!`,
+            {
+              medicine: reminder.medicine,
+              time: reminder.time,
+              reminderId: reminder._id.toString(),
+              timestamp: nowIST.toISOString(),
+              type: 'medicine_reminder'
             }
+          );
+          
+          console.log('📊 Notification result:', result);
+          
+          if (result.success) {
+            sentCount += result.validTokens || 1;
+            console.log(`✅ Notification sent successfully to ${result.validTokens} device(s)`);
           } else {
-            console.log(`⚠️ No FCM tokens found for user ${reminder.user}`);
+            console.log(`❌ Failed to send notification: ${result.message}`);
           }
+          
         } catch (error) {
           console.error(`❌ Error processing reminder:`, error.message);
         }
