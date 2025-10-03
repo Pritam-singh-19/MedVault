@@ -98,6 +98,19 @@ app.listen(PORT, () => {
   console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🧪 Test notifications: http://localhost:${PORT}/api/test-reminder-now`);
   console.log(`⏰ Manual cron: http://localhost:${PORT}/api/cron/trigger-reminders`);
+  
+  // 🔔 NEW: Auto-run notification checker every minute
+  console.log('⏰ Starting automatic reminder checker...');
+  setInterval(async () => {
+    try {
+      console.log('🔄 Auto-checking reminders...');
+      await checkAndSendReminders();
+    } catch (error) {
+      console.error('❌ Scheduled notification check failed:', error.message);
+    }
+  }, 60000); // 60000ms = 1 minute
+  
+  console.log('✅ Automatic reminder scheduler started - checks every minute');
 });
 
 // Handle uncaught exceptions
