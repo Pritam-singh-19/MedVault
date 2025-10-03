@@ -1,15 +1,10 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const morgan = require("morgan");
-const authRoutes = require("./routes/authRoutes");
-const profileRoutes = require("./routes/profileRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
-const explainReportRoutes = require("./routes/explainReportRoutes");
-const chatbotRoutes = require("./routes/chatbot");
-const { connectDB, gridFSBucket } = require("./config/db");
-
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/userRoutes');
+const reminderRoutes = require('./routes/reminderRoutes');
+const { checkAndSendReminders } = require('./checkAndSendReminder');
 
 dotenv.config();
 
@@ -18,46 +13,98 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: "https://medvault19.netlify.app", // Allow only Netlify frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  exposedHeaders: ['Content-Length', 'X-Request-ID'],
+  origin: ['https://medvault19.netlify.app', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
-app.use(morgan("dev"));
 
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/reminders', reminderRoutes);
 
-// Connect to MongoDB and Start Server
-connectDB()
-  .then(() => {
-    // Routes
-    app.use("/api/auth", authRoutes);
-    app.use("/api/profile", profileRoutes);
-    app.use("/api/upload", uploadRoutes);
-    app.use("/api", explainReportRoutes);
-    app.use("/api", chatbotRoutes);
-  app.use("/api/reminders", require("./routes/reminderRoutes"));
-  app.use("/api/cron", require("./routes/cronRoutes"));
-    
-    // Log all upload API requests
-    app.use("/api/upload", (req, res, next) => {
-      console.log(`📩 API Hit: ${req.method} ${req.originalUrl}`);
-      next();
+// Cron endpoint for manual testing
+app.get('/api/cron/trigger-reminders', async (req, res) => {
+  console.log('🔔 Manual cron trigger called at', new Date().toISOString());
+  try {
+    const result = await checkAndSendReminders();
+    res.status(200).json({ 
+      success: true, 
+      message: 'Reminders checked successfully',
+      ...result 
     });
+  } catch (error) {
+    console.error('❌ Cron job error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
-
-
-    // Root Route
-    app.get("/", (req, res) => {
-      res.send("🚀 API is running...");
+// Test endpoint for debugging
+app.get('/api/test-reminder-now', async (req, res) => {
+  console.log('🧪 Test endpoint called at', new Date().toISOString());
+  try {
+    const result = await checkAndSendReminders();
+    res.status(200).json({ 
+      success: true, 
+      message: 'Test completed - check server logs',
+      ...result 
     });
+  } catch (error) {
+    console.error('❌ Test error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
-    // Start Server
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Error connecting to MongoDB:", err);
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    message: 'MedVault server is running'
   });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'MedVault API Server',
+    endpoints: [
+      'GET /api/health - Health check',
+      'POST /api/users/register - Register user',
+      'POST /api/users/login - Login user',
+      'GET /api/reminders - Get reminders',
+      'POST /api/reminders - Create reminder',
+      'GET /api/cron/trigger-reminders - Trigger notifications manually',
+      'GET /api/test-reminder-now - Test notifications'
+    ]
+  });
+});
+
+// Database connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('✅ Connected to MongoDB');
+  console.log('🚀 Server starting...');
+})
+.catch(err => {
+  console.error('❌ MongoDB connection error:', err);
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`🌟 Server running on port ${PORT}`);
+  console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`🧪 Test notifications: http://localhost:${PORT}/api/test-reminder-now`);
+  console.log(`⏰ Manual cron: http://localhost:${PORT}/api/cron/trigger-reminders`);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('❌ Unhandled Rejection:', err);
+});

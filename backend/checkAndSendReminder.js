@@ -12,8 +12,8 @@ async function checkAndSendReminders() {
   const today = new Date(nowIST.getFullYear(), nowIST.getMonth(), nowIST.getDate());
 
   console.log('⏰ checkAndSendReminders running at', nowUTC.toISOString(), '(UTC)');
-  console.log('🇮🇳 IST time:', nowIST.toISOString());
-  console.log(`🕐 Current IST time: ${currentHour}:${currentMinute.toString().padStart(2, '0')}`);
+  console.log('🇮🇳 IST time:', nowIST.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }));
+  console.log(`🕐 Current IST time: ${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`);
   
   // Find all reminders that are due now
   const reminders = await Reminder.find({});
@@ -22,7 +22,7 @@ async function checkAndSendReminders() {
   let sentCount = 0;
   
   for (const reminder of reminders) {
-    console.log(`🔍 Checking reminder: ${reminder.medicine} at ${reminder.time} (created: ${new Date(reminder.createdAt).toLocaleDateString()})`);
+    console.log(`\n🔍 Checking reminder: "${reminder.medicine}" at ${reminder.time} for ${reminder.days || 1} day(s)`);
     
     // Calculate if today is within the allowed days (using IST)
     const createdAtUTC = new Date(reminder.createdAt);
@@ -30,52 +30,88 @@ async function checkAndSendReminders() {
     const createdDate = new Date(createdAtIST.getFullYear(), createdAtIST.getMonth(), createdAtIST.getDate());
     const diffDays = Math.floor((today - createdDate) / (1000 * 60 * 60 * 24));
     
-    console.log(`📅 Day ${diffDays + 1} of ${reminder.days || 1} days`);
+    console.log(`📅 Created: ${createdDate.toDateString()}`);
+    console.log(`📅 Today: ${today.toDateString()}`);
+    console.log(`📅 Day ${diffDays + 1} of ${reminder.days || 1} day(s)`);
     
-    if (
-      diffDays >= 0 &&
-      diffDays < (reminder.days || 1)
-    ) {
+    // Check if reminder is still active (within the days range)
+    // Day 0 = first day, Day 1 = second day, etc.
+    const isActiveDay = diffDays >= 0 && diffDays < (reminder.days || 1);
+    
+    if (isActiveDay) {
+      console.log(`✅ Reminder is active today`);
+      
+      // Parse reminder time
       const [h, m] = reminder.time.split(":");
       const reminderHour = Number(h);
       const reminderMinute = Number(m);
       
-      console.log(`🕐 Reminder time: ${reminderHour}:${reminderMinute.toString().padStart(2, '0')}, Current: ${currentHour}:${currentMinute.toString().padStart(2, '0')}`);
+      console.log(`🎯 Target time: ${reminderHour.toString().padStart(2, '0')}:${reminderMinute.toString().padStart(2, '0')}`);
+      console.log(`🕐 Current time: ${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`);
       
-      if (reminderHour === currentHour && reminderMinute === currentMinute) {
-        console.log(`📬 Reminder due NOW: ${reminder.medicine} for user ${reminder.user}`);
+      // EXACT TIME MATCH - No tolerance window for precision
+      const isExactTime = (reminderHour === currentHour && reminderMinute === currentMinute);
+      
+      if (isExactTime) {
+        console.log(`🎯 EXACT TIME MATCH! Sending notification NOW...`);
         dueCount++;
         
-        // Get the user's FCM tokens (multi-device support)
-        const user = await User.findById(reminder.user);
-        if (user && user.fcmTokens && Array.isArray(user.fcmTokens)) {
-          console.log(`👤 Found user with ${user.fcmTokens.length} FCM tokens`);
-          for (const token of user.fcmTokens) {
-            console.log(`➡️ Sending push to token: ${token.substring(0, 20)}...`);
-            try {
-              await sendPushNotification(
-                token,
-                'Medicine Reminder',
-                `It's time to take your medicine: ${reminder.medicine}`
-              );
-              sentCount++;
-              console.log(`✅ Notification sent successfully`);
-            } catch (error) {
-              console.error(`❌ Failed to send notification:`, error.message);
+        try {
+          // Get the user's FCM tokens (multi-device support)
+          const user = await User.findById(reminder.user);
+          
+          if (user && user.fcmTokens && Array.isArray(user.fcmTokens) && user.fcmTokens.length > 0) {
+            console.log(`👤 User found with ${user.fcmTokens.length} device(s)`);
+            
+            // Send to ALL devices (mobile + desktop)
+            for (let i = 0; i < user.fcmTokens.length; i++) {
+              const token = user.fcmTokens[i];
+              console.log(`📱 Sending to device ${i + 1}: ${token.substring(0, 30)}...`);
+              
+              try {
+                const result = await sendPushNotification(
+                  token,
+                  '💊 Medicine Reminder',
+                  `Time to take your medicine: ${reminder.medicine}`,
+                  {
+                    reminderTime: reminder.time,
+                    medicine: reminder.medicine,
+                    timestamp: nowIST.toISOString(),
+                    type: 'medicine_reminder'
+                  }
+                );
+                
+                console.log(`✅ Notification sent to device ${i + 1}:`, result?.successCount || 'Success');
+                sentCount++;
+              } catch (error) {
+                console.error(`❌ Failed to send to device ${i + 1}:`, error.message);
+                
+                // Clean up invalid FCM tokens
+                if (error.code === 'messaging/registration-token-not-registered' || 
+                    error.code === 'messaging/invalid-registration-token') {
+                  console.log(`🗑️ Removing invalid token from user`);
+                  user.fcmTokens.splice(i, 1);
+                  await user.save();
+                  i--; // Adjust index after removal
+                }
+              }
             }
+          } else {
+            console.log(`⚠️ No FCM tokens found for user ${reminder.user}`);
           }
-        } else {
-          console.log(`⚠️ No FCM tokens found for user ${reminder.user}`);
+        } catch (error) {
+          console.error(`❌ Error processing reminder:`, error.message);
         }
       } else {
-        console.log(`⏳ Not due yet (time mismatch)`);
+        console.log(`⏳ Not the exact time yet (waiting for ${reminderHour.toString().padStart(2, '0')}:${reminderMinute.toString().padStart(2, '0')})`);
       }
     } else {
-      console.log(`📅 Not in active days range (day ${diffDays + 1} not within ${reminder.days || 1} days)`);
+      console.log(`📅 Reminder expired (day ${diffDays + 1} > ${reminder.days || 1} days)`);
     }
   }
   
-  console.log(`📊 Summary: ${dueCount} reminders due, ${sentCount} notifications sent`);
+  console.log(`\n📊 SUMMARY: ${dueCount} reminders due, ${sentCount} notifications sent`);
+  return { dueCount, sentCount };
 }
 
 module.exports = { checkAndSendReminders };
