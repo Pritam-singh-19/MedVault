@@ -4,6 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const reminderRoutes = require('./routes/reminderRoutes');
+const uploadRoutes = require('./routes/uploadRoutes'); // ADDED
+const profileRoutes = require('./routes/profileRoutes'); // ADDED (since you mentioned profile page wasn't working)
 const { checkAndSendReminders } = require('./checkAndSendReminder');
 
 dotenv.config();
@@ -21,6 +23,8 @@ app.use(express.json());
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/reminders', reminderRoutes);
+app.use('/api/upload', uploadRoutes); // ADDED
+app.use('/api/profile', profileRoutes); // ADDED
 
 // Cron endpoint for manual testing
 app.get('/api/cron/trigger-reminders', async (req, res) => {
@@ -73,6 +77,10 @@ app.get('/', (req, res) => {
       'POST /api/users/login - Login user',
       'GET /api/reminders - Get reminders',
       'POST /api/reminders - Create reminder',
+      'GET /api/upload/folders - Get folders', // ADDED
+      'POST /api/upload - Upload file', // ADDED
+      'GET /api/profile/me - Get profile', // ADDED
+      'PUT /api/profile/update - Update profile', // ADDED
       'GET /api/cron/trigger-reminders - Trigger notifications manually',
       'GET /api/test-reminder-now - Test notifications'
     ]

@@ -68,7 +68,6 @@ const updateProfile = async (req, res) => {
   }
 };
 
-
 // Save FCM Token (Private)
 const saveFcmToken = async (req, res) => {
   try {
@@ -80,12 +79,9 @@ const saveFcmToken = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    // Add token if not already present
-    if (!user.fcmTokens) user.fcmTokens = [];
-    if (!user.fcmTokens.includes(fcmToken)) {
-      user.fcmTokens.push(fcmToken);
-      await user.save();
-    }
+    // Use the helper method from User model (prevents duplicates automatically)
+    const tokenAdded = user.addFCMToken(fcmToken);
+    await user.save();
     res.status(200).json({ message: "FCM token saved" });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
