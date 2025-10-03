@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const path = require('path');
+const User = require('./models/userModel');
 
 // Initialize Firebase Admin only once
 if (!admin.apps.length) {
@@ -30,144 +31,129 @@ if (!admin.apps.length) {
   }
 }
 
-/**
- * Send a push notification to a device using FCM token.
- * @param {string|string[]} fcmTokenOrTokens - The device's FCM token or array of tokens.
- * @param {string} title - Notification title.
- * @param {string} body - Notification body.
- * @param {object} data - Additional data payload (optional).
- */
-async function sendPushNotification(fcmTokenOrTokens, title, body, data = {}) {
-  // Accepts a single token or an array of tokens
-  const tokens = Array.isArray(fcmTokenOrTokens) ? fcmTokenOrTokens : [fcmTokenOrTokens];
-  
-  console.log(`📤 Sending notification "${title}" to ${tokens.length} device(s)`);
-  
-  const baseMessage = {
-    notification: {
-      title,
-      body,
-    },
-    data: {
-      ...data,
-      timestamp: new Date().toISOString(),
-    },
-    // Android specific options
-    android: {
-      notification: {
-        sound: 'default',
-        priority: 'high',
-        channelId: 'medicine_reminders',
-        icon: 'ic_notification', // Use your app's notification icon
-      },
-      priority: 'high',
-    },
-    // iOS specific options
-    apns: {
-      payload: {
-        aps: {
-          sound: 'default',
-          badge: 1,
-          alert: {
-            title: title,
-            body: body,
+const sendPushNotification = async (userId, title, body, data = {}) => {
+  try {
+    console.log(`📤 Sending notification "${title}" to user ${userId}`);
+
+    const user = await User.findById(userId);
+    if (!user || !user.fcmTokens || user.fcmTokens.length === 0) {
+      console.log(`⚠️ No FCM tokens found for user ${userId}`);
+      return { success: false, message: 'No FCM tokens found' };
+    }
+
+    const validTokens = [];
+    const invalidTokens = [];
+    
+    console.log(`📱 Found ${user.fcmTokens.length} token(s) for user`);
+
+    // Send to each token individually to identify invalid ones
+    for (let i = 0; i < user.fcmTokens.length; i++) {
+      const token = user.fcmTokens[i];
+      console.log(`📱 Sending to device ${i + 1}: ${token.substring(0, 20)}...`);
+
+      const message = {
+        notification: {
+          title: title,
+          body: body,
+        },
+        data: {
+          ...data,
+          timestamp: Date.now().toString(),
+        },
+        // Android specific options
+        android: {
+          notification: {
+            sound: 'default',
+            priority: 'high',
+            channelId: 'medicine_reminders',
+            icon: 'ic_notification',
+          },
+          priority: 'high',
+        },
+        // iOS specific options
+        apns: {
+          payload: {
+            aps: {
+              sound: 'default',
+              badge: 1,
+              alert: {
+                title: title,
+                body: body,
+              },
+            },
+          },
+          headers: {
+            'apns-priority': '10',
           },
         },
-      },
-      headers: {
-        'apns-priority': '10',
-      },
-    },
-    // Web push options
-    webpush: {
-      notification: {
-        title: title,
-        body: body,
-        icon: 'https://medvault19.netlify.app/Medvault-logo.png', // Updated with your domain
-        badge: 'https://medvault19.netlify.app/Medvault-logo.png',
-        requireInteraction: true,
-        actions: [
-          {
-            action: 'taken',
-            title: '✅ Taken',
+        // Web push options
+        webpush: {
+          notification: {
+            title: title,
+            body: body,
+            icon: 'https://medvault19.netlify.app/Medvault-logo.png',
+            badge: 'https://medvault19.netlify.app/Medvault-logo.png',
+            requireInteraction: true,
+            actions: [
+              {
+                action: 'taken',
+                title: '✅ Taken',
+              },
+              {
+                action: 'snooze',
+                title: '⏰ Snooze 5 min',
+              }
+            ],
           },
-          {
-            action: 'snooze',
-            title: '⏰ Snooze 5 min',
-          }
-        ],
-      },
-      headers: {
-        'Urgency': 'high',
-      },
-    },
-  };
+          headers: {
+            'Urgency': 'high',
+          },
+        },
+        token: token,
+      };
 
-  try {
-    let results = [];
-    let successCount = 0;
-    let failureCount = 0;
-    
-    if (tokens.length > 1) {
-      // Use sendEachForMulticast for multiple tokens
-      const multicastMessage = { ...baseMessage, tokens };
-      const response = await admin.messaging().sendEachForMulticast(multicastMessage);
-      
-      console.log(`✅ Multicast sent - Success: ${response.successCount}, Failure: ${response.failureCount}`);
-      
-      // Handle individual token failures
-      response.responses.forEach((resp, idx) => {
-        if (!resp.success) {
-          console.error(`❌ Failed to send to token ${idx + 1}:`, resp.error?.message);
-          if (resp.error?.code === 'messaging/registration-token-not-registered' || 
-              resp.error?.code === 'messaging/invalid-registration-token') {
-            console.log(`🗑️ Token ${idx + 1} is invalid and should be removed`);
-          }
+      try {
+        console.log(`📤 Sending notification "${title}" to 1 device(s)`);
+        const response = await admin.messaging().send(message);
+        console.log(`✅ Single notification sent successfully: ${response}`);
+        console.log(`✅ Notification sent to device ${i + 1}: 1`);
+        validTokens.push(token);
+      } catch (error) {
+        console.error(`❌ Error sending push notification:`, error.message);
+        
+        // Check if token is invalid/expired
+        if (error.code === 'messaging/registration-token-not-registered' || 
+            error.code === 'messaging/invalid-registration-token' ||
+            error.message.includes('Requested entity was not found')) {
+          console.log(`🗑️ Token is invalid/expired - should remove from database`);
+          invalidTokens.push(token);
         }
-      });
-      
-      successCount = response.successCount;
-      failureCount = response.failureCount;
-      results = response.responses;
-      
-    } else {
-      // Single token send
-      const singleMessage = { ...baseMessage, token: tokens[0] };
-      const response = await admin.messaging().send(singleMessage);
-      
-      console.log('✅ Single notification sent successfully:', response);
-      successCount = 1;
-      results = [{ success: true, messageId: response }];
+        console.log(`✅ Notification sent to device ${i + 1}: Success`);
+      }
     }
-    
-    return { 
-      success: true, 
-      successCount, 
-      failureCount, 
-      results,
-      message: `Sent ${successCount}/${tokens.length} notifications successfully`
+
+    // Clean up invalid tokens automatically
+    if (invalidTokens.length > 0) {
+      console.log(`🧹 Cleaning up ${invalidTokens.length} invalid token(s)`);
+      for (const invalidToken of invalidTokens) {
+        user.removeFCMToken(invalidToken);
+      }
+      await user.save();
+      console.log(`✅ Cleaned up invalid tokens. Remaining: ${user.fcmTokens.length}`);
+    }
+
+    const totalSent = validTokens.length;
+    return {
+      success: totalSent > 0,
+      message: `Notification sent to ${totalSent} device(s)`,
+      validTokens: totalSent,
+      invalidTokens: invalidTokens.length
     };
-    
+
   } catch (error) {
-    console.error('❌ Error sending push notification:', error.message);
-    
-    // Handle specific Firebase errors
-    if (error.code === 'messaging/registration-token-not-registered') {
-      console.log('🗑️ Token is invalid/expired - should remove from database');
-    } else if (error.code === 'messaging/invalid-registration-token') {
-      console.log('🗑️ Token format is invalid - should remove from database');
-    } else if (error.code === 'messaging/authentication-error') {
-      console.log('🔐 Firebase authentication error - check service account credentials');
-    }
-    
-    return { 
-      success: false, 
-      error: error.message, 
-      code: error.code,
-      successCount: 0,
-      failureCount: tokens.length 
-    };
+    console.error('❌ Push notification error:', error);
+    return { success: false, message: error.message };
   }
-}
+};
 
 module.exports = { sendPushNotification };

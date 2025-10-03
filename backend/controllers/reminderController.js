@@ -158,9 +158,46 @@ const saveFCMToken = async (req, res) => {
   }
 };
 
+// NEW: Clean up invalid FCM tokens
+const cleanupInvalidTokens = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { invalidToken } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Remove the invalid token
+    const tokenRemoved = user.removeFCMToken(invalidToken);
+    if (tokenRemoved) {
+      await user.save();
+      console.log(`🗑️ Removed invalid FCM token for user ${user.email}`);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Invalid token cleaned up',
+      tokenCount: user.fcmTokens.length
+    });
+  } catch (error) {
+    console.error('Cleanup token error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error cleaning up token',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   createReminder,
   getReminders,
   markMedicineTaken,
-  saveFCMToken
+  saveFCMToken,
+  cleanupInvalidTokens // NEW function
 };
