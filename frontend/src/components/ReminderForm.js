@@ -3,34 +3,38 @@ import axios from "axios";
 import "./styles/UserHome.css";
 import medvaultLogo from "../assets/Medvault-logo.png";
 
-
-const ReminderForm = ({ onSetReminder }) => {
+const ReminderForm = ({ onSetReminder, reminders, setReminders }) => {
   const [medicine, setMedicine] = useState("");
   const [time, setTime] = useState("");
   const [days, setDays] = useState(''); // Number of days for the reminder
   const [message, setMessage] = useState("");
-  const [reminders, setReminders] = useState([]);
+  const [localReminders, setLocalReminders] = useState([]);
+
+  // Use passed reminders or fetch them locally
+  const displayReminders = reminders || localReminders;
 
   // Fetch reminders from backend on mount and periodically
   useEffect(() => {
+    if (reminders) return; // If reminders are passed as props, don't fetch
+
     const fetchReminders = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/reminders`,
+          `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/reminders`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setReminders(res.data);
+        // Handle both array and object responses
+        const remindersData = res.data.reminders || res.data || [];
+        setLocalReminders(remindersData);
       } catch (err) {
-        // Ignore fetch errors for now
+        console.error("❌ Failed to fetch reminders:", err);
       }
     };
     fetchReminders();
     const pollInterval = setInterval(fetchReminders, 60000); // Poll every 60 seconds
     return () => clearInterval(pollInterval);
-  }, []);
-
-  // Removed in-app Notification API usage. Let FCM/service worker handle notifications.
+  }, [reminders]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,33 +46,43 @@ const ReminderForm = ({ onSetReminder }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/reminders`,
-  { medicine, time, days: Number(days) },
+        `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/reminders`,
+        { medicine, time, days: Number(days) },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (res.status === 201) {
-        setMessage("✅ Reminder set!");
-  onSetReminder({ medicine, time, days });
-  setMedicine("");
-  setTime("");
-  setDays('');
+      
+      if (res.data.success) {
+        setMessage("✅ Reminder set successfully!");
+        onSetReminder({ medicine, time, days });
+        setMedicine("");
+        setTime("");
+        setDays('');
+        
         // Refetch reminders after setting a new one
         const fetchReminders = async () => {
           try {
             const token = localStorage.getItem("token");
             const res = await axios.get(
-              `${process.env.REACT_APP_API_URL}/api/reminders`,
+              `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/reminders`,
               { headers: { Authorization: `Bearer ${token}` } }
             );
-            setReminders(res.data);
-          } catch (err) {}
+            const remindersData = res.data.reminders || res.data || [];
+            if (setReminders) {
+              setReminders(remindersData);
+            } else {
+              setLocalReminders(remindersData);
+            }
+          } catch (err) {
+            console.error("❌ Failed to refetch reminders:", err);
+          }
         };
         fetchReminders();
       } else {
-        setMessage(res.data.message || "Failed to set reminder.");
+        setMessage(res.data.message || "❌ Failed to set reminder.");
       }
     } catch (err) {
-      setMessage("Failed to set reminder.");
+      console.error("❌ Error setting reminder:", err);
+      setMessage("❌ Failed to set reminder.");
     }
   };
 
@@ -76,7 +90,7 @@ const ReminderForm = ({ onSetReminder }) => {
     <div className="user-home">
       <div className="cards-container">
         <div className="home-card">
-          <h3>Set Medicine Reminder</h3>
+          <h3>💊 Set Medicine Reminder</h3>
 
           {/* ✅ The form with inputs + time + button */}
           <form onSubmit={handleSubmit}>
@@ -126,11 +140,33 @@ const ReminderForm = ({ onSetReminder }) => {
               required
               style={{ margin: '8px 0', width: '92%' }}
             />
-            <button type="submit">Set Reminder</button>
+            <button type="submit">🔔 Set Reminder</button>
           </form>
 
           {/* ✅ Feedback message */}
-          {message && <p>{message}</p>}
+          {message && <p style={{ 
+            color: message.includes('✅') ? 'green' : 'red',
+            fontWeight: 'bold' 
+          }}>{message}</p>}
+
+          {/* ✅ Display current reminders */}
+          {displayReminders.length > 0 && (
+            <div style={{ marginTop: '20px' }}>
+              <h4>📋 Your Reminders:</h4>
+              {displayReminders.map((reminder, index) => (
+                <div key={reminder._id || index} style={{
+                  background: '#f5f5f5',
+                  padding: '10px',
+                  margin: '5px 0',
+                  borderRadius: '5px'
+                }}>
+                  <strong>💊 {reminder.medicine}</strong><br />
+                  <span>⏰ {reminder.time}</span><br />
+                  <span>📅 {reminder.days} day(s)</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

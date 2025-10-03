@@ -11,7 +11,27 @@ const firebaseConfig = {
   measurementId: "G-W39313KTGF"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Cloud Messaging and get a reference to the service
 const messaging = getMessaging(app);
 
-export { messaging, getToken, onMessage };
+// Handle foreground messages
+onMessage(messaging, (payload) => {
+  console.log('🔔 Foreground message received:', payload);
+  
+  // Show custom notification in foreground
+  if (payload.notification) {
+    new Notification(payload.notification.title, {
+      body: payload.notification.body,
+      icon: '/Medvault-logo.png',
+      badge: '/Medvault-logo.png',
+      tag: 'medicine-reminder',
+      requireInteraction: true
+    });
+  }
+});
+
+export { messaging, getToken };
+export default app;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { messaging, getToken } from "./firebase";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
@@ -47,14 +46,16 @@ function App() {
           .then((currentToken) => {
             if (currentToken) {
               setFcmToken(currentToken);
-              console.log('FCM Token:', currentToken);
+              console.log('✅ FCM Token obtained:', currentToken.substring(0, 50) + '...');
             } else {
-              console.log('No registration token available. Request permission to generate one.');
+              console.log('❌ No FCM token available. Request permission to generate one.');
             }
           })
           .catch((err) => {
-            console.log('An error occurred while retrieving token. ', err);
+            console.log('❌ Error retrieving FCM token:', err);
           });
+      } else {
+        console.log('❌ Notification permission denied');
       }
     });
   }, []);
@@ -65,14 +66,15 @@ function App() {
       if (isAuthenticated && fcmToken) {
         const token = localStorage.getItem("token");
         try {
-          await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/profile/save-fcm-token`,
+          // FIXED: Use the correct endpoint for reminders
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/reminders/save-fcm-token`,
             { fcmToken },
             { headers: { Authorization: `Bearer ${token}` } }
           );
-          console.log("FCM token sent to backend");
+          console.log("✅ FCM token sent to backend successfully:", response.data);
         } catch (err) {
-          console.error("Failed to send FCM token to backend", err);
+          console.error("❌ Failed to send FCM token to backend:", err.response?.data || err.message);
         }
       }
     };
@@ -103,18 +105,20 @@ function App() {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/reminders`,
+          `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/reminders`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setReminders(res.data);
-      } catch (err) {}
+        // Handle both array and object responses
+        const remindersData = res.data.reminders || res.data || [];
+        setReminders(remindersData);
+      } catch (err) {
+        console.error("❌ Failed to fetch reminders:", err);
+      }
     };
     fetchReminders();
     const pollInterval = setInterval(fetchReminders, 60000); // Poll every 60 seconds
     return () => clearInterval(pollInterval);
   }, [isAuthenticated]);
-
-  // Removed in-app Notification API usage. Let FCM/service worker handle notifications.
 
   const handleSignIn = (token, userData) => {
     setIsAuthenticated(true);
@@ -129,6 +133,7 @@ function App() {
     localStorage.removeItem("user");
     setUser(null);
     setReminders([]);
+    setFcmToken(null); // Clear FCM token on logout
   };
 
   // Pass reminders and setReminders to ReminderForm for refetch after submit
@@ -176,7 +181,7 @@ function AppContent({ isAuthenticated, user, handleSignIn, handleSignOut, remind
         <Route path="/prescriptions" element={isAuthenticated ? <Prescriptions /> : <Navigate to="/login" replace />} />
         <Route path="/prescriptions/:folderName" element={isAuthenticated ? <PrescriptionDetail /> : <Navigate to="/login" replace />} /> 
         <Route path="/explain-report" element={isAuthenticated ? <ExplainReport /> : <Navigate to="/login" replace />} />
-  <Route path="/reminder" element={<ReminderForm reminders={reminders} setReminders={setReminders} onSetReminder={() => {}} />} />
+        <Route path="/reminder" element={<ReminderForm reminders={reminders} setReminders={setReminders} onSetReminder={() => {}} />} />
       </Routes>
     </>
   );
