@@ -156,6 +156,7 @@ const ReminderForm = ({ onSetReminder, reminders, setReminders }) => {
               {displayReminders.map((reminder, index) => (
                 <div key={reminder._id || index} style={{
                   background: '#f5f5f5',
+                  color: '#333',
                   padding: '10px',
                   margin: '5px 0',
                   borderRadius: '5px'

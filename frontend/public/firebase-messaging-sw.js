@@ -1,3 +1,57 @@
+// PWA Caching - ADD THIS AT THE TOP
+const CACHE_NAME = 'medvault-v1';
+const urlsToCache = [
+  '/',
+  '/static/js/bundle.js',
+  '/static/css/main.css',
+  '/in-app-logo.png',
+  '/Medvault-logo.png',
+  '/manifest.json'
+];
+
+// PWA Install Event
+self.addEventListener('install', (event) => {
+  console.log('📦 Service Worker installing...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('📦 Caching app shell');
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+// PWA Fetch Event (Offline Support)
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+  );
+});
+
+// PWA Activate Event
+self.addEventListener('activate', (event) => {
+  console.log('🚀 Service Worker activated');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('🗑️ Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+// FIREBASE MESSAGING - YOUR EXISTING CODE
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
@@ -21,14 +75,14 @@ messaging.onBackgroundMessage(function(payload) {
     body: payload.notification?.body || 'Time to take your medicine!',
     icon: '/Medvault-logo.png',
     badge: '/Medvault-logo.png',
-    tag: 'medicine-reminder', // Groups notifications
-    requireInteraction: true, // Keeps notification visible until user interacts
-    silent: false, // Play notification sound
-    vibrate: [200, 100, 200], // Vibration pattern for mobile
+    tag: 'medicine-reminder',
+    requireInteraction: true,
+    silent: false,
+    vibrate: [200, 100, 200],
     timestamp: Date.now(),
     data: {
       ...payload.data,
-      url: '/reminder', // URL to open when clicked
+      url: '/reminder',
       timestamp: Date.now()
     },
     actions: [
@@ -59,24 +113,19 @@ self.addEventListener('notificationclick', function(event) {
   
   event.notification.close();
   
-  // Handle different actions
   switch(event.action) {
     case 'taken':
-      // Mark medicine as taken (you can implement this later)
       console.log('✅ Medicine marked as taken');
       break;
       
     case 'snooze':
-      // Snooze for 5 minutes (you can implement this later)
       console.log('⏰ Reminder snoozed for 5 minutes');
       break;
       
     case 'view':
     default:
-      // Open the reminder page
       event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
-          // Check if app is already open
           for (let i = 0; i < clientList.length; i++) {
             const client = clientList[i];
             if (client.url.includes('/reminder') && 'focus' in client) {
@@ -84,7 +133,6 @@ self.addEventListener('notificationclick', function(event) {
             }
           }
           
-          // If app is not open, open it
           if (clients.openWindow) {
             const baseUrl = event.notification.data?.url || '/reminder';
             return clients.openWindow(baseUrl);
