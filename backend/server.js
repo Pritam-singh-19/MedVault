@@ -7,6 +7,7 @@ const reminderRoutes = require('./routes/reminderRoutes');
 const uploadRoutes = require('./routes/uploadRoutes'); // ADDED
 const profileRoutes = require('./routes/profileRoutes'); // ADDED (since you mentioned profile page wasn't working)
 const { checkAndSendReminders } = require('./checkAndSendReminder');
+const { connectDB } = require('./config/db'); // ADD THIS LINE
 
 dotenv.config();
 
@@ -87,18 +88,17 @@ app.get('/', (req, res) => {
   });
 });
 
+// NEW: Use your config file
+const { connectDB } = require('./config/db');
+
 // Database connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('✅ Connected to MongoDB');
+connectDB().then(() => {
   console.log('🚀 Server starting...');
-})
-.catch(err => {
-  console.error('❌ MongoDB connection error:', err);
+}).catch(err => {
+  console.error('❌ Database connection failed:', err);
 });
+
+
 
 // Start server
 app.listen(PORT, () => {
