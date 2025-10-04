@@ -340,8 +340,28 @@ const getImagesByFolder = async (req, res) => {
 };
 
 // Get all images for the authenticated user
+// Get all images for the authenticated user
 const getAllImages = async (req, res) => {
   try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const allImages = [];
+    user.prescriptionFolders.forEach(folder => {
+      folder.images.forEach(image => {
+        allImages.push({
+          fileId: image.fileId,
+          filename: image.filename,
+          folderName: folder.folderName,
+          uploadDate: image.uploadDate,
+          imageUrl: `https://${req.get('host')}/api/upload/image/${image.fileId}`
+        });
+      });
+    });
     
     res.status(200).json(allImages);
   } catch (error) {
@@ -402,29 +422,6 @@ const deleteImage = async (req, res) => {
   }
 };
 
-
-// Get all folders with images
-exports.getFolders = async (req, res) => {
-  try {
-    const prescriptions = await Prescription.find({ userId: req.user.id });
-
-    const folders = {};
-    prescriptions.forEach((prescription) => {
-      if (!folders[prescription.folderName]) {
-        folders[prescription.folderName] = [];
-      }
-      folders[prescription.folderName].push({
-        fileId: prescription._id,
-        filename: prescription.filename,
-        imageUrl: prescription.imageUrl,
-      });
-    });
-
-    res.status(200).json({ folders });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching prescriptions" });
-  }
-};
 
 // Delete a folder and all its images
 const deleteFolder = async (req, res) => {
