@@ -2,8 +2,6 @@
 const CACHE_NAME = 'medvault-v1';
 const urlsToCache = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
   '/in-app-logo.png',
   '/Medvault-logo.png',
   '/manifest.json'
@@ -18,20 +16,29 @@ self.addEventListener('install', (event) => {
         console.log('📦 Caching app shell');
         return cache.addAll(urlsToCache);
       })
+      .catch((error) => {
+        console.error('❌ Cache failed:', error);
+      })
   );
 });
 
-// PWA Fetch Event (Offline Support)
+// PWA Fetch Event (Fixed to prevent errors)
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
+  // Only handle same-origin requests
+  if (event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          if (response) {
+            return response;
+          }
+          return fetch(event.request).catch(() => {
+            // Return a fallback for failed requests
+            return new Response('Offline', { status: 503 });
+          });
+        })
+    );
+  }
 });
 
 // PWA Activate Event
