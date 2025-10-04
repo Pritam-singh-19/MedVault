@@ -4,10 +4,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const reminderRoutes = require('./routes/reminderRoutes');
-const uploadRoutes = require('./routes/uploadRoutes'); // ADDED
-const profileRoutes = require('./routes/profileRoutes'); // ADDED (since you mentioned profile page wasn't working)
+const uploadRoutes = require('./routes/uploadRoutes'); 
+const profileRoutes = require('./routes/profileRoutes'); 
 const { checkAndSendReminders } = require('./checkAndSendReminder');
-const { connectDB } = require('./config/db'); // ADD THIS LINE
+const { connectDB } = require('./config/db'); 
 
 dotenv.config();
 
@@ -88,8 +88,6 @@ app.get('/', (req, res) => {
   });
 });
 
-// NEW: Use your config file
-const { connectDB } = require('./config/db');
 
 // Database connection
 connectDB().then(() => {
