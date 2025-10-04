@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const reminderRoutes = require('./routes/reminderRoutes');
 const uploadRoutes = require('./routes/uploadRoutes'); 
 const profileRoutes = require('./routes/profileRoutes'); 
+const explainReportRoutes = require('./routes/explainReportRoutes'); 
 const { checkAndSendReminders } = require('./checkAndSendReminder');
 const { connectDB } = require('./config/db'); 
 
@@ -24,8 +25,9 @@ app.use(express.json());
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/reminders', reminderRoutes);
-app.use('/api/upload', uploadRoutes); // ADDED
-app.use('/api/profile', profileRoutes); // ADDED
+app.use('/api/upload', uploadRoutes); 
+app.use('/api/profile', profileRoutes);
+app.use('/api', explainReportRoutes);
 
 // Cron endpoint for manual testing
 app.get('/api/cron/trigger-reminders', async (req, res) => {
