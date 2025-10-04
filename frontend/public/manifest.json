@@ -1,24 +1,20 @@
 {
-  "name": "MedVault - Medical Records Manager",
   "short_name": "MedVault",
-  "description": "Secure medical records and prescription management",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "orientation": "portrait-primary",
+  "name": "MedVault Medical Reminder",
   "icons": [
     {
-      "src": "/in-app-logo.png",
-      "sizes": "192x192",
+      "src": "Medvault-logo.png",
       "type": "image/png",
-      "purpose": "maskable any"
+      "sizes": "192x192"
     },
     {
-      "src": "/in-app-logo.png",
-      "sizes": "512x512",
+      "src": "Medvault-logo-512.png",
       "type": "image/png",
-      "purpose": "maskable any"
+      "sizes": "512x512"
     }
-  ]
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1976d2",
+  "background_color": "#131a29"
 }

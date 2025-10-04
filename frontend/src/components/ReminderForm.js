@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./styles/UserHome.css";
@@ -148,26 +149,6 @@ const ReminderForm = ({ onSetReminder, reminders, setReminders }) => {
             color: message.includes('✅') ? 'green' : 'red',
             fontWeight: 'bold' 
           }}>{message}</p>}
-
-          {/* ✅ Display current reminders */}
-          {displayReminders.length > 0 && (
-            <div style={{ marginTop: '20px' }}>
-              <h4>📋 Your Reminders:</h4>
-              {displayReminders.map((reminder, index) => (
-                <div key={reminder._id || index} style={{
-                  background: '#f5f5f5',
-                  color: '#333',
-                  padding: '10px',
-                  margin: '5px 0',
-                  borderRadius: '5px'
-                }}>
-                  <strong>💊 {reminder.medicine}</strong><br />
-                  <span>⏰ {reminder.time}</span><br />
-                  <span>📅 {reminder.days} day(s)</span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>
