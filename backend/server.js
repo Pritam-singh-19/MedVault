@@ -7,6 +7,7 @@ const reminderRoutes = require('./routes/reminderRoutes');
 const uploadRoutes = require('./routes/uploadRoutes'); 
 const profileRoutes = require('./routes/profileRoutes'); 
 const explainReportRoutes = require('./routes/explainReportRoutes'); 
+const chatbotRoutes = require('./routes/chatbot');
 const { checkAndSendReminders } = require('./checkAndSendReminder');
 const { connectDB } = require('./config/db'); 
 
@@ -28,6 +29,7 @@ app.use('/api/reminders', reminderRoutes);
 app.use('/api/upload', uploadRoutes); 
 app.use('/api/profile', profileRoutes);
 app.use('/api', explainReportRoutes);
+app.use('/api', chatbotRoutes);
 
 // Cron endpoint for manual testing
 app.get('/api/cron/trigger-reminders', async (req, res) => {
